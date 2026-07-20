@@ -1,0 +1,63 @@
+name: Bug report
+description: Something does not work as documented
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. For security issues, use [SECURITY.md](../../SECURITY.md) instead.
+  - type: dropdown
+    id: host
+    attributes:
+      label: AI host
+      options:
+        - Cursor
+        - Claude Code
+        - Codex
+        - Gemini CLI
+        - Other / shared (.agents/skills)
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: OS
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Smart Vibe Kit version
+      description: From skill.json / SKILL.md metadata (e.g. 1.0.0)
+      placeholder: "1.0.0"
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Install command, invoke text, and what happened
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / output
+      description: Optional — verify_structure.py or install.py output
+      render: shell

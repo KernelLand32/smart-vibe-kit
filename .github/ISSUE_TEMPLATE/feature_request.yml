@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest an improvement to the skill or installer
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+      description: What is hard or missing today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Keep the single slash command `/smart-vibe-kit` unless you are proposing a documented exception.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Bootstrap / SKILL.md
+        - Verifier
+        - Installer / hosts
+        - Templates / workflows
+        - Docs
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints acknowledged
+      options:
+        - label: I am not requesting additional slash commands (procedures live in docs/workflows/).
+          required: true
+        - label: The package must stay free of machine-specific paths and personal data.
+          required: true

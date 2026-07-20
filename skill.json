@@ -1,0 +1,38 @@
+{
+  "name": "smart-vibe-kit",
+  "version": "1.0.0",
+  "description": "Bootstrap execution-grounded project process from a project idea via /smart-vibe-kit",
+  "license": "Apache-2.0",
+  "entrypoint": "SKILL.md",
+  "triggers": ["/smart-vibe-kit", "smart-vibe-kit"],
+  "standard": "https://agentskills.io/specification",
+  "note": "Hosts typically load SKILL.md; skill.json is a portable manifest for install paths and versioning. Prefer installing to ~/.agents/skills for cross-host discovery.",
+  "install": {
+    "recommended": "agents",
+    "command": "python scripts/install.py --target all --scope user",
+    "agents": {
+      "user": "~/.agents/skills/smart-vibe-kit",
+      "project": ".agents/skills/smart-vibe-kit",
+      "covers": ["Cursor", "Gemini CLI", "Codex (project)", "other Agent Skills hosts"]
+    },
+    "cursor": {
+      "user": "~/.cursor/skills/smart-vibe-kit",
+      "project": ".cursor/skills/smart-vibe-kit"
+    },
+    "claude": {
+      "user": "~/.claude/skills/smart-vibe-kit",
+      "project": ".claude/skills/smart-vibe-kit",
+      "legacyCommand": ".claude/commands/smart-vibe-kit.md",
+      "alsoUsedBy": ["VS Code / Copilot (many setups)", "Gemini (compat)", "other .claude scanners"]
+    },
+    "codex": {
+      "user": "~/.codex/skills/smart-vibe-kit",
+      "project": ".agents/skills/smart-vibe-kit"
+    },
+    "gemini": {
+      "user": "~/.gemini/skills/smart-vibe-kit",
+      "project": ".gemini/skills/smart-vibe-kit",
+      "alias": "~/.agents/skills (preferred shared path)"
+    }
+  }
+}

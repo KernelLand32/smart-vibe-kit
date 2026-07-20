@@ -1,0 +1,41 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Regenerate golden trees
+        run: |
+          python scripts/gen_minimal_tree.py --out tests/fixtures/minimal_bootstrap
+          python scripts/gen_minimal_tree.py --out examples/offline-habit-tracker --name HabitVault
+      - name: Skill package verify
+        run: python scripts/verify_skill_package.py
+      - name: Example bootstrap verify
+        run: python scripts/verify_structure.py --root examples/offline-habit-tracker --bootstrap --strict
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Install what-if
+        run: python scripts/install.py --what-if --target all --scope user
+      - name: Install manifest round-trip
+        run: |
+          DEST=$(mktemp -d)
+          mkdir -p "$DEST"
+          while IFS= read -r line || [[ -n "$line" ]]; do
+            line="${line#"${line%%[![:space:]]*}"}"
+            [[ -z "$line" || "$line" == \#* ]] && continue
+            mkdir -p "$DEST/$(dirname "$line")"
+            cp -R "$line" "$DEST/$line"
+          done < scripts/install-manifest.txt
+          test -f "$DEST/SKILL.md"
+          test -f "$DEST/scripts/install.py"
+          test -f "$DEST/scripts/verify_structure.py"
+          test ! -e "$DEST/scripts/gen_minimal_tree.py"
+          test ! -e "$DEST/tests"
