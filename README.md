@@ -28,9 +28,30 @@ Best fit: **new or mostly empty repo** and a clear idea. Not a “convert my leg
 
 ---
 
+## Philosophy
+
+Still vibe coding—just with a spine.
+
+The starting bet is simple: agents are useful when the **ground truth lives in the repo**, not in yesterday’s chat. A good session should leave the next agent (or you, tomorrow) a clearer project than it found—not a pile of confident fiction and half-remembered decisions.
+
+That shows up as a few working beliefs:
+
+- **Process before product theater.** The first win is not a convincing UI mock or a fake API surface. It is a shared operating model: what is known, what is guessed, what to read next, and what “done” is allowed to mean.
+- **Explore before invent.** Early stages inventory facts and open questions. Implementation fiction (named endpoints, version pins, compliance claims) waits until evidence or an explicit decision exists—or it is labeled as assumption, not shipped as truth.
+- **Truth has layers.** Constitution and `AGENTS.md` set non-negotiables. Specs hold living topic truth with claim tables. ADRs lock irreversible choices and stage openings. The tasks index tracks status and evidence pointers—not novels of prose. The registry says which docs matter for *this* task.
+- **Context is a budget.** Loading everything “just in case” makes the agent average every document into mush. Scoped retrieval is how you keep work local, cheap, and honest.
+- **Evidence closes work.** Outside narrow explore/process waivers, `done` needs docs that match reality, tests that pass, and something that actually ran in the session. Sounding finished is not a gate.
+- **Mistakes should compound into clarity.** Wrong guesses are normal. Silent rewrites are not. Corrections go into specs; course changes go into ADRs; repeatable failure modes preferably get a test or structural check so the next session does not rediscover the same lie.
+
+Vibe is welcome for the idea and the energy. Shipping truth is citations, pins, authorize gates, and commands that ran. The kit cannot force an agent to follow the docs—but it makes following them the path of least resistance.
+
+Method detail: [references/method.md](references/method.md). Constitution defaults: [references/constitution.md](references/constitution.md).
+
+---
+
 ## Rules (after bootstrap)
 
-These are the constitution in short form. After bootstrap, treat them as the project contract—not optional style tips.
+These are the philosophy as day-to-day contract. After bootstrap, treat them as project law—not optional style tips.
 
 1. **Repo beats memory.** Project docs win over training data and chat memory. Missing fact → stop and flag it (`[DECISION NEEDED]` / `[OPEN QUESTION]`). Don’t invent a neat default for an API, version, or constraint.
 2. **Read only what you need.** `docs/registry.md` lists the minimum docs per task. Small, intentional context keeps the agent on *this* task; dumping the whole tree is how sessions go sideways.
