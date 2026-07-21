@@ -20,7 +20,9 @@ Agents are good at sounding done. They are worse at:
 - opening the next stage only when you said so
 - fixing wrong guesses in the docs instead of quietly rewriting chat history
 
-This kit bootstraps files that make those habits the default for the project. It does not make the model honest by magic—if the agent ignores the docs, you still get garbage.
+Most “start a project with AI” flows race to the first files. You get a repo that *looks* complete on shaky assumptions. Smart Vibe Kit aims at a different first win: a **process that survives agent sessions**—scoped reading, labeled claims, authorized stage changes, and real gates before anything can be marked `done`.
+
+The kit writes those habits into the workspace as ordinary files (`AGENTS.md`, specs, ADRs, checklists, a structure checker). Vibe is fine for the idea; shipping truth is citations, pins, and commands that actually ran. It still does not make the model honest by magic—if the agent ignores the docs, you still get garbage.
 
 Best fit: **new or mostly empty repo** and a clear idea. Not a “convert my legacy monorepo” tool.
 
@@ -28,11 +30,13 @@ Best fit: **new or mostly empty repo** and a clear idea. Not a “convert my leg
 
 ## Rules (after bootstrap)
 
-1. **Repo beats memory.** Project docs win. Missing fact → stop and flag it. Don’t invent a neat default.
-2. **Read only what you need.** `docs/registry.md` lists the minimum docs per task. Don’t dump everything into context.
-3. **“Done” means it ran.** Docs match reality, tests pass, runtime evidence exists (narrow waivers for explore/process-only work). Prose alone doesn’t finish implementation.
-4. **Stages open on purpose.** Exploration / design / build open through ADRs—not because the agent “felt” the next step.
-5. **Wrong guesses become decisions.** Fix the spec, record an ADR or registry note, preferably add a test or structural check. No silent patches.
+These are the constitution in short form. After bootstrap, treat them as the project contract—not optional style tips.
+
+1. **Repo beats memory.** Project docs win over training data and chat memory. Missing fact → stop and flag it (`[DECISION NEEDED]` / `[OPEN QUESTION]`). Don’t invent a neat default for an API, version, or constraint.
+2. **Read only what you need.** `docs/registry.md` lists the minimum docs per task. Small, intentional context keeps the agent on *this* task; dumping the whole tree is how sessions go sideways.
+3. **“Done” means it ran.** Docs match reality, tests pass, and runtime evidence exists from this session (narrow waivers for explore/process-only work). Prose alone doesn’t finish implementation.
+4. **Stages open on purpose.** Exploration → design → build unlock through authorize ADRs—not because the agent “felt” the next step mid-chat.
+5. **Wrong guesses become decisions.** Fix the spec, record an ADR or registry note, and preferably add a test or structural check. No silent patches that leave the next session guessing again.
 
 ---
 
