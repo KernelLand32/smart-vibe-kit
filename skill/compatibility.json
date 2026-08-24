@@ -1,0 +1,175 @@
+{
+  "schema_version": "2.0",
+  "kit_version": "2.0.0",
+  "evaluated_on": "2026-08-23",
+  "default_target": "agents",
+  "logical_actions": ["svk-interview", "svk-refresh", "svk-next", "svk-check"],
+  "claim_policy": "Compatibility follows published harness behavior unless runtime_tested is true. Model-family compatibility depends on the harness.",
+  "hosts": {
+    "agents": {
+      "user_root": "~/.agents/skills",
+      "project_root": ".agents/skills",
+      "invocation": "host-specific explicit invocation",
+      "frontmatter_policy_key": null,
+      "status": "shared-standard",
+      "runtime_tested": false,
+      "notes": "Portable Agent Skills destination shared by several harnesses."
+    },
+    "codex": {
+      "user_root": "~/.agents/skills",
+      "project_root": ".agents/skills",
+      "invocation": "$<skill-name> or the host skill selector",
+      "frontmatter_policy_key": null,
+      "implicit_policy": "agents/openai.yaml policy.allow_implicit_invocation",
+      "status": "contract-verified",
+      "runtime_tested": false,
+      "evidence_url": "https://developers.openai.com/codex/skills/"
+    },
+    "cursor": {
+      "user_root": "~/.cursor/skills",
+      "project_root": ".cursor/skills",
+      "invocation": "/{skill}",
+      "frontmatter_policy_key": "disable-model-invocation",
+      "status": "contract-compatible-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://cursor.com/docs/context/skills"
+    },
+    "claude": {
+      "user_root": "~/.claude/skills",
+      "project_root": ".claude/skills",
+      "invocation": "/{skill}",
+      "frontmatter_policy_key": "disable-model-invocation",
+      "status": "contract-compatible-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://code.claude.com/docs/en/skills"
+    },
+    "gemini": {
+      "user_root": "~/.gemini/skills",
+      "project_root": ".gemini/skills",
+      "invocation": "natural-language request plus activation consent; /skills manages skills",
+      "frontmatter_policy_key": null,
+      "status": "partial-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://geminicli.com/docs/cli/using-agent-skills/"
+    },
+    "antigravity": {
+      "user_root": "~/.gemini/config/skills",
+      "project_root": ".agents/skills",
+      "invocation": "explicit name or host skill UI; CLI variants may expose slash actions",
+      "frontmatter_policy_key": null,
+      "status": "partial-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://antigravity.google/docs/skills"
+    },
+    "grok": {
+      "user_root": "~/.agents/skills",
+      "project_root": ".agents/skills",
+      "invocation": "/{skill}",
+      "frontmatter_policy_key": "disable-model-invocation",
+      "status": "contract-compatible-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://github.com/xai-org/grok-build/blob/main/crates/codegen/xai-grok-pager/docs/user-guide/08-skills.md"
+    },
+    "copilot": {
+      "user_root": "~/.agents/skills",
+      "project_root": ".agents/skills",
+      "invocation": "explicit named request; /skills manages discovery and reload",
+      "frontmatter_policy_key": null,
+      "status": "partial-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference"
+    },
+    "qwen": {
+      "user_root": "~/.qwen/skills",
+      "project_root": ".qwen/skills",
+      "invocation": "/{skill} or /skills picker",
+      "frontmatter_policy_key": "disable-model-invocation",
+      "status": "contract-compatible-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://qwenlm.github.io/qwen-code-docs/en/users/features/skills/"
+    },
+    "kimi": {
+      "user_root": "~/.kimi-code/skills",
+      "project_root": ".kimi-code/skills",
+      "invocation": "/skill:{skill}",
+      "frontmatter_policy_key": "disableModelInvocation",
+      "status": "contract-compatible-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://github.com/MoonshotAI/kimi-code/blob/main/docs/en/customization/skills.md"
+    },
+    "opencode": {
+      "user_root": "~/.agents/skills",
+      "project_root": ".agents/skills",
+      "invocation": "model skill tool or explicit natural-language request",
+      "frontmatter_policy_key": null,
+      "status": "partial-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://opencode.ai/docs/skills"
+    },
+    "goose": {
+      "user_root": "~/.agents/skills",
+      "project_root": ".agents/skills",
+      "invocation": "/skills {skill} or explicit natural-language request",
+      "frontmatter_policy_key": null,
+      "status": "partial-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://goose-docs.ai/docs/guides/context-engineering/using-skills/"
+    },
+    "roo": {
+      "user_root": "~/.agents/skills",
+      "project_root": ".agents/skills",
+      "invocation": "model-selected skill after explicit request",
+      "frontmatter_policy_key": null,
+      "status": "partial-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://docs.roocode.com/features/skills"
+    },
+    "junie": {
+      "user_root": "~/.agents/skills",
+      "project_root": ".agents/skills",
+      "invocation": "/{skill} or ${skill}",
+      "frontmatter_policy_key": null,
+      "status": "partial-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://junie.jetbrains.com/docs/agent-skills.html"
+    },
+    "cline": {
+      "user_root": "~/.cline/skills",
+      "project_root": ".cline/skills",
+      "invocation": "/{skill} or explicit named request",
+      "frontmatter_policy_key": null,
+      "status": "partial-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://docs.cline.bot/customization/skills"
+    },
+    "kiro": {
+      "user_root": "~/.kiro/skills",
+      "project_root": ".kiro/skills",
+      "invocation": "explicit named request or host skill interface; relevance-based activation",
+      "frontmatter_policy_key": null,
+      "status": "partial-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://kiro.dev/docs/skills/"
+    },
+    "windsurf": {
+      "user_root": "~/.codeium/windsurf/skills",
+      "project_root": ".windsurf/skills",
+      "invocation": "@{skill} or host skill interface",
+      "frontmatter_policy_key": null,
+      "status": "partial-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://docs.windsurf.com/windsurf/cascade/skills"
+    }
+  },
+  "non_native_harnesses": {
+    "aider": "No native Agent Skills adapter; use a conventions file or explicit prompt injection.",
+    "model_api": "A raw model API has no skill filesystem or invocation contract without a harness."
+  },
+  "model_families": {
+    "deepseek": "Harness-dependent; test with the same fixtures used for other models.",
+    "glm": "Harness-dependent; test with the same fixtures used for other models.",
+    "minimax": "Harness-dependent; test with the same fixtures used for other models.",
+    "qwen": "Qwen Code has a host row; other Qwen deployments remain harness-dependent.",
+    "kimi": "Kimi Code CLI has a host row; other Kimi deployments remain harness-dependent."
+  }
+}

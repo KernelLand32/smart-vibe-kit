@@ -1,0 +1,7 @@
+interface:
+  display_name: "SVK Interview"
+  short_description: "Interview and scaffold a project with SVK"
+  default_prompt: "Use $svk-interview to interview me and scaffold this project."
+
+policy:
+  allow_implicit_invocation: false

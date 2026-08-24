@@ -1,0 +1,7 @@
+interface:
+  display_name: "SVK Check"
+  short_description: "Check SVK project structure and state"
+  default_prompt: "Use $svk-check to check this SVK project."
+
+policy:
+  allow_implicit_invocation: false

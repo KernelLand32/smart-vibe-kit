@@ -1,0 +1,7 @@
+interface:
+  display_name: "SVK Refresh"
+  short_description: "Restore the current SVK project context"
+  default_prompt: "Use $svk-refresh to restore this project context."
+
+policy:
+  allow_implicit_invocation: false

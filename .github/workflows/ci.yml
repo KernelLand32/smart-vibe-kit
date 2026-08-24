@@ -1,0 +1,34 @@
+name: Smart Vibe Kit verification
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ['3.8', '3.12']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Runtime tests
+        run: python -B -m unittest discover -s skill/tests -v
+      - name: Installer tests
+        run: python -B -m unittest discover -s installer/tests -v
+      - name: Package contract
+        run: python -B skill/runtime/svk.py check --package --root skill
+      - name: Complete release audit
+        run: python -B scripts/release_check.py
+      - name: POSIX launcher smoke test
+        if: runner.os != 'Windows'
+        run: sh installer/install.sh --version
+      - name: PowerShell launcher smoke test
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./installer/install.ps1 --version

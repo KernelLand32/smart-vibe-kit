@@ -1,0 +1,7 @@
+interface:
+  display_name: "SVK Next"
+  short_description: "Complete one authorized SVK task and stop"
+  default_prompt: "Use $svk-next to complete exactly one authorized task."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,92 @@
+{
+  "authorizations": [],
+  "charter": {
+    "accepted": true
+  },
+  "kit_version": "2.0.0",
+  "next_action": {
+    "instruction": "Implement and verify: List unfinished tasks after restarting the program",
+    "task_id": "3.2.1"
+  },
+  "project": "pocket-list",
+  "schema_version": "2.0",
+  "stage": "execution",
+  "tasks": [
+    {
+      "artifact": ".svk/project.json",
+      "depends_on": [],
+      "human_gate": false,
+      "id": "1.1.1",
+      "status": "done",
+      "title": "Capture the project interview and adaptive profile",
+      "verification": "The project profile passes SVK semantic validation."
+    },
+    {
+      "artifact": "docs/adr/0001-project-charter.md",
+      "depends_on": [
+        "1.1.1"
+      ],
+      "human_gate": true,
+      "id": "1.1.2",
+      "status": "done",
+      "title": "Review and accept the project charter",
+      "verification": "A human confirms scope, goals, non-goals, constraints, and selected modules."
+    },
+    {
+      "artifact": "docs/product/requirements.md",
+      "depends_on": [
+        "1.1.2"
+      ],
+      "human_gate": false,
+      "id": "2.1.1",
+      "status": "done",
+      "title": "Confirm requirements and acceptance criteria",
+      "verification": "The artifact contains project-specific decisions and evidence."
+    },
+    {
+      "artifact": "Implementation and tests for: Add a task and save it locally",
+      "depends_on": [
+        "2.1.1"
+      ],
+      "human_gate": false,
+      "id": "3.1.1",
+      "status": "done",
+      "title": "Implement and verify: Add a task and save it locally",
+      "verification": "The goal has observable passing evidence and respects the accepted constraints."
+    },
+    {
+      "artifact": "Implementation and tests for: List unfinished tasks after restarting the program",
+      "depends_on": [
+        "3.1.1"
+      ],
+      "human_gate": false,
+      "id": "3.2.1",
+      "status": "in_progress",
+      "title": "Implement and verify: List unfinished tasks after restarting the program",
+      "verification": "The goal has observable passing evidence and respects the accepted constraints."
+    },
+    {
+      "artifact": "Implementation and tests for: Mark a task complete without losing other tasks",
+      "depends_on": [
+        "3.2.1"
+      ],
+      "human_gate": false,
+      "id": "3.3.1",
+      "status": "pending",
+      "title": "Implement and verify: Mark a task complete without losing other tasks",
+      "verification": "The goal has observable passing evidence and respects the accepted constraints."
+    },
+    {
+      "artifact": "docs/verification.md",
+      "depends_on": [
+        "3.3.1"
+      ],
+      "human_gate": false,
+      "id": "4.1.1",
+      "status": "pending",
+      "title": "Run the release-readiness verification gate",
+      "verification": "All required checks pass and evidence is recorded."
+    }
+  ],
+  "updated_at": "2026-08-23T14:00:09Z"
+}

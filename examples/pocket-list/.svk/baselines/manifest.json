@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-08-23T13:57:06Z",
+  "files": {
+    ".svk/evidence.jsonl": "730a27ab32110a2217933853137ceaaeafc36af32852388e2bcacca60589fc02",
+    ".svk/install.json": "76820f5fde35a9f800de79d7e3bf1e8138fd7f0da7a5d6feb65e3e73892d1c71",
+    ".svk/project.json": "170487e3ce333fd8ab8af01fdf86e214f3240469808d83f392ba052721e6d2e1",
+    ".svk/state.json": "44093bdd85a754093458b17e92b84230f7c60b9616750e9657b2ec3627719d9f",
+    ".svk/transactions/scaffold-91e0bb1e8f954e85937bf0a56dfbc90a.json": "55b07d66f1c96daff78663961af764ea11e20fef140630908187747ee39a8820",
+    "AGENTS.md": "c3888a7f1f252ffd031e1230d55d0dafa585f0a34454377d322243350458ae64",
+    "docs/adr/0001-project-charter.md": "decd67cd8de66bbbd9004927d70054b806c93e61faa29cbf96990696d5543386",
+    "docs/constitution.md": "19e5aa55997c2a1c2f893b7e828734d399dada62ab0edb3b46a38ee0779b6bc7",
+    "docs/product/acceptance.md": "4df10f7a5e691fb2449d1c90b84cfcbad3ddbd1ccdeea7f988dae2b473f07f90",
+    "docs/product/requirements.md": "d4e435d6494b8d17cb1d40c4ec4ecea10f3836415151893204594e1d14ef08d6",
+    "docs/registry.md": "c3c4aefedbc64238379a54dc457b85b149c2b86aedf1b45bb77352e07e7708fe",
+    "docs/tasks.md": "33bc7c43534fe82680d2aebf8db939391dbd52059b148f69ece362fc8d89aa11",
+    "docs/verification.md": "a37e1bff87e7f1c4167795ab75fbb5bd79074b09a456fd1969a69c6918a3611c"
+  },
+  "version": "2.0.0"
+}

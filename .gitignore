@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+node_modules/
+.opencode/node_modules/
+*.bak-*
+*.uninstalled-*
+.svk-stage-*/
+.svk-install-stage-*/
+.svk-install-backup-*/
+.svk-uninstall-*/

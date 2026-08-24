@@ -1,0 +1,32 @@
+{
+  "title": "Pocket List",
+  "slug": "pocket-list",
+  "idea": "Build a small offline command-line task list for one person. The program stores its data locally and keeps working without an internet connection.",
+  "goals": [
+    "Add a task and save it locally",
+    "List unfinished tasks after restarting the program",
+    "Mark a task complete without losing other tasks"
+  ],
+  "non_goals": [
+    "No accounts or sign-in",
+    "No cloud sync or collaboration",
+    "No graphical or web interface",
+    "No due dates, reminders, tags, or recurring tasks in the first release"
+  ],
+  "constraints": [
+    "Use Python 3.8 or newer and only the standard library",
+    "Store data in a human-readable local JSON file",
+    "Run without a network connection",
+    "Keep the command syntax and stored-data behavior testable"
+  ],
+  "platforms": ["Windows", "macOS", "Linux"],
+  "integrations": [],
+  "research_tier": 0,
+  "risk": "low",
+  "team_size": 1,
+  "user_facing": true,
+  "ui": false,
+  "deployable": false,
+  "sensitive_data": false,
+  "regulated": false
+}
