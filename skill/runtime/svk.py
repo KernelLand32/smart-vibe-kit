@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Portable entry point for Smart Vibe Kit 2.0."""
+"""Portable entry point for Smart Vibe Kit 2.1."""
 
 from svk_core.cli import run
 

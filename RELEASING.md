@@ -1,6 +1,6 @@
 # Releasing Smart Vibe Kit
 
-Use this checklist for a public source release. Run commands from the repository root with Python 3.8 or newer.
+Use this checklist for a public source release. Run commands from the repository root with Python 3.11 or newer.
 
 ## 1. Confirm release metadata
 
@@ -18,9 +18,10 @@ python -B -m unittest discover -s examples/pocket-list/tests -v
 python -B skill/runtime/svk.py check --package --root skill
 python -B skill/runtime/svk.py check --root examples/pocket-list
 python -B scripts/release_check.py
+python -B scripts/verify_archive.py
 ```
 
-The final command checks version consistency, required release files, Python syntax, JSON and JSONL parsing, local Markdown links, privacy leaks, cache files, the skill package, and every included example.
+`release_check.py` checks version consistency, required release files, Python syntax, JSON and JSONL parsing, local Markdown links, privacy leaks, cache files, the skill package, and every included example. `verify_archive.py` builds the ZIP, safely extracts it into a clean temporary directory, and runs the same release audit from the extracted tree.
 
 ## 3. Build the archive
 
@@ -28,7 +29,7 @@ The final command checks version consistency, required release files, Python syn
 python -B scripts/build_release.py
 ```
 
-This creates `dist/smart-vibe-kit-<version>.zip` and its `.sha256` file. The archive uses stable paths, timestamps, ordering, permissions, and compression so identical source trees produce identical bytes.
+This creates `dist/smart-vibe-kit-<version>.zip` and its `.sha256` file. The archive uses stable paths, timestamps, ordering, permissions, and uncompressed stored entries so identical source trees produce identical bytes across supported operating systems and zlib versions.
 
 Run the build twice and compare hashes when changing packaging logic. Extract the archive into a clean temporary directory and run `scripts/release_check.py` from the extracted tree before publication.
 

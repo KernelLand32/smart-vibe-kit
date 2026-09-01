@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smart-vibe-kit.local/schemas/command-envelope-2.1.json",
+  "title": "SVK 2.1 JSON command envelope",
+  "type": "object",
+  "required": ["schema_version", "kit_version", "ok", "command", "result", "diagnostics"],
+  "properties": {
+    "schema_version": {"const": "2.1"}, "kit_version": {"const": "2.1.0"}, "ok": {"type": "boolean"},
+    "command": {"type": "string", "minLength": 1},
+    "result": {"enum": ["success", "blocked", "contract_error", "io_error", "internal_error"]},
+    "diagnostics": {"type": "array", "items": {"type": "object"}},
+    "value": {},
+    "error": {"type": "object", "required": ["category", "type", "message"], "properties": {"category": {"enum": ["contract", "io-or-ownership", "internal"]}, "type": {"type": "string", "minLength": 1}, "message": {"type": "string", "minLength": 1}}, "additionalProperties": false}
+  },
+  "oneOf": [
+    {"properties": {"ok": {"const": true}}, "required": ["value"], "not": {"required": ["error"]}},
+    {"properties": {"ok": {"const": false}}, "required": ["error"], "not": {"required": ["value"]}}
+  ],
+  "additionalProperties": false
+}

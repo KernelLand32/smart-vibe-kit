@@ -6,14 +6,15 @@ The machine-readable source of truth is [`.svk/state.json`](../.svk/state.json).
 
 | ID | Status | Task | Evidence target |
 |---|---|---|---|
-| 1.1.1 | done | Capture the project interview and adaptive profile | `.svk/project.json` |
+| 1.1.1 | done | Capture the project interview, profile, and approved plan | `.svk/plan.json` |
 | 1.1.2 | done | Review and accept the project charter | `docs/adr/0001-project-charter.md` |
 | 2.1.1 | done | Confirm requirements and acceptance criteria | `docs/product/requirements.md` |
-| 3.1.1 | done | Implement and verify: Add a task and save it locally | `Implementation and tests for: Add a task and save it locally` |
-| 3.2.1 | in_progress | Implement and verify: List unfinished tasks after restarting the program | `Implementation and tests for: List unfinished tasks after restarting the program` |
-| 3.3.1 | pending | Implement and verify: Mark a task complete without losing other tasks | `Implementation and tests for: Mark a task complete without losing other tasks` |
+| 3.1.1 | done | Implement atomic task creation and JSON persistence | `pocket_list.py` |
+| 3.1.2 | done | Lock in add-command persistence regressions | `tests/test_pocket_list.py` |
+| 3.2.1 | in_progress | Implement restart-safe unfinished-task listing | `pocket_list.py, tests/test_pocket_list.py` |
+| 3.3.1 | pending | Implement lossless task completion | `pocket_list.py, tests/test_pocket_list.py` |
 | 4.1.1 | pending | Run the release-readiness verification gate | `docs/verification.md` |
 
 ## Execution rule
 
-Exactly one task may be active. SVK Next performs or advances that task and then stops.
+Exactly one task may be active. Dependencies may branch, but SVK 2.1 still leases one task at a time. SVK Next advances that task and then stops.

@@ -4,7 +4,8 @@
 
 | Version | Supported |
 |---|---|
-| 2.0.x | Yes |
+| 2.1.x | Yes |
+| 2.0.x | Migration support only |
 | < 2.0 | Best effort |
 
 ## Reporting
@@ -13,4 +14,4 @@ Report suspected vulnerabilities privately to the project owner. Include the aff
 
 ## Safety boundaries
 
-SVK refuses filesystem roots, home directories, unowned installation replacements, unsafe manifest paths, and ambiguous project overwrites. Scaffold and install operations validate staged output before commit. Task-state updates use ownership locks, transaction records, post-change checks, and rollback on detected failure. A security bug that bypasses one of these boundaries should be treated as high priority.
+SVK refuses filesystem roots, home directories, unowned or drifted installation replacements, unsafe governed paths, symbolic-link/reparse escapes, and ambiguous project overwrites. Scaffold, migration, and install operations validate staged output before commit. Task changes use revision-bound leases, a transition lock, durable transactions, verifier receipts, post-change checks, and rollback on detected failure. A security bug that bypasses one of these boundaries should be treated as high priority.

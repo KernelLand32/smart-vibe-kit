@@ -1,0 +1,9 @@
+test_add_persists_and_ids_continue_after_reload (test_pocket_list.AddTaskTests.test_add_persists_and_ids_continue_after_reload) ... ok
+test_blank_text_fails_without_changing_data (test_pocket_list.AddTaskTests.test_blank_text_fails_without_changing_data) ... ok
+test_cli_reports_added_task (test_pocket_list.AddTaskTests.test_cli_reports_added_task) ... ok
+test_malformed_data_is_reported_without_overwrite (test_pocket_list.AddTaskTests.test_malformed_data_is_reported_without_overwrite) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.022s
+
+OK

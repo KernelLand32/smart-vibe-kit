@@ -12,7 +12,7 @@ Pocket List serves one person who wants a task list that is quick to use from a 
 4. `done <id>` marks exactly one existing unfinished task complete and confirms the change.
 5. Unknown or already-completed IDs exit unsuccessfully without changing other tasks.
 6. Data is stored in a human-readable local JSON file. A missing file means an empty list; malformed data produces a clear error and is not overwritten.
-7. The program runs on Python 3.8 or newer using only the standard library and makes no network requests.
+7. The program runs on Python 3.11 or newer using only the standard library and makes no network requests.
 
 ## Explicitly outside the first release
 

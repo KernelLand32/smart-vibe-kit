@@ -1,20 +1,18 @@
 ---
 name: svk-refresh
-description: Reconstruct a token-light Smart Vibe Kit project briefing from machine state, task state, evidence, and semantic checks without changing the project. Use only when the user explicitly invokes SVK Refresh or asks to run this named action after returning to an existing SVK project.
+description: Reconstruct a compact Smart Vibe Kit briefing from governed project state, the approved plan, evidence receipts, and deterministic diagnostics without changing the project. Use only when the user explicitly invokes SVK Refresh or asks to run this named action.
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
 ---
 
 # SVK Refresh
 
-If this skill was selected implicitly, do not act. Explain that SVK Refresh is explicit-only and show the host-appropriate invocation.
-
-When explicitly invoked:
+This action is explicit-only and strictly read-only.
 
 1. Run `python scripts/entry.py --root <project>` before opening broad source context.
-2. Treat the action as strictly read-only. Do not repair drift, clear locks, rewrite state, or begin the next task.
-3. Read only the artifacts named by the active task if more context is required.
-4. Return a compact briefing: project, profile, modules, stage, active task, blocker, exact next action, and check result.
-5. If the result is `ERROR` or `BLOCKED`, surface the stable diagnostic codes and stop. Recommend SVK Check; do not mutate the project.
+2. Do not repair drift, clear leases, recover transactions, rewrite state, or begin work.
+3. Read only the active task's named artifacts when more context is needed.
+4. Return project, profile, modules, stage, state revision, active task, blocker, exact next action, and check result.
+5. Surface stable diagnostic codes for `ERROR` or `BLOCKED` and stop. Recommend SVK Check without mutating the project.
 
-See [the runtime contract](references/contract.md) for the output and read-only guarantees.
+See [the contract](references/contract.md) for the output and read-only guarantee.

@@ -1,6 +1,6 @@
-# Install Smart Vibe Kit 2.0.0
+# Install Smart Vibe Kit 2.1.0
 
-The installer reads the sibling `../skill/` bundle. Keep both top-level folders together when installing from an archive or clone. Python 3.8 or newer is required; the runtime has no third-party dependencies.
+The installer reads the sibling `../skill/` bundle. Keep both top-level folders together when installing from an archive or clone. Python 3.11 or newer is required; the runtime has no third-party dependencies.
 
 ## Default install
 
@@ -14,7 +14,7 @@ py -3 installer/install.py
 python3 installer/install.py
 ```
 
-This installs four visible skills plus one hidden shared runtime. Existing paths are replaced only when their ownership markers identify Smart Vibe Kit.
+This installs four visible skills plus one hidden shared runtime. Each complete ownership marker records the canonical entry name and kind, version, transaction-wide installation ID, destination fingerprint, supported upgrade source, install time, and digest of its managed entry. Every entry from one destination transaction shares the same installation ID.
 
 ## Choose a harness
 
@@ -50,13 +50,13 @@ Preview without writes:
 python installer/install.py --target all --dry-run
 ```
 
-Run the same install command to update an owned 2.x installation transactionally. Remove only owned SVK paths with:
+A clean 2.1 reinstall is transactional. Replacing a legacy 2.0 marker requires the explicit human gate `--approve-upgrade`. If owned files differ from their digest, the installer refuses unless `--preserve-local-changes` is supplied; that option retains the sibling backup. Remove only owned SVK paths with:
 
 ```text
 python installer/install.py --target agents --uninstall
 ```
 
-An unowned directory with the same name is never overwritten or removed. `--dest <skill-root>` is available for custom harnesses and controlled testing.
+An unowned or malformed-marker directory with the same name is never overwritten or removed. Symbolic links and reparse points are rejected at installation boundaries. `--dest <skill-root>` is available for custom harnesses and controlled testing.
 
 ## Launchers
 

@@ -1,92 +1,317 @@
 {
-  "authorizations": [],
+  "authorizations": [
+    {
+      "actor": "interview caller",
+      "kind": "cooperative-human-attestation",
+      "reason": "The caller explicitly used the charter-accepted Interview option.",
+      "recorded_at": "2026-08-30T21:39:00Z",
+      "task_id": "1.1.2"
+    }
+  ],
   "charter": {
     "accepted": true
   },
-  "kit_version": "2.0.0",
+  "kit_version": "2.1.0",
   "next_action": {
-    "instruction": "Implement and verify: List unfinished tasks after restarting the program",
+    "instruction": "Implement restart-safe unfinished-task listing",
     "task_id": "3.2.1"
   },
   "project": "pocket-list",
-  "schema_version": "2.0",
+  "schema_version": "2.1",
   "stage": "execution",
+  "state_revision": 7,
   "tasks": [
     {
-      "artifact": ".svk/project.json",
+      "acceptance": [
+        "The profile and approved plan pass deterministic validation."
+      ],
+      "completion_receipts": [],
+      "deliverable_id": "interview",
+      "dependency_rationale": {},
       "depends_on": [],
+      "expected_artifacts": [
+        ".svk/plan.json"
+      ],
+      "goal_id": "system",
       "human_gate": false,
       "id": "1.1.1",
+      "kind": "documentation",
+      "required_verifiers": [
+        "svk-governed"
+      ],
+      "risk": "normal",
+      "scope_hints": [
+        ".svk/plan.json"
+      ],
+      "size_signals": {
+        "acceptance_items": 1,
+        "scope_hints": 1,
+        "subsystems": 1,
+        "verifier_count": 1
+      },
       "status": "done",
-      "title": "Capture the project interview and adaptive profile",
-      "verification": "The project profile passes SVK semantic validation."
+      "title": "Capture the project interview, profile, and approved plan"
     },
     {
-      "artifact": "docs/adr/0001-project-charter.md",
+      "acceptance": [
+        "A human attests that scope, goals, non-goals, constraints, modules, and plan are accepted."
+      ],
+      "completion_receipts": [],
+      "deliverable_id": "charter",
+      "dependency_rationale": {
+        "1.1.1": "SVK setup prerequisite."
+      },
       "depends_on": [
         "1.1.1"
       ],
+      "expected_artifacts": [
+        "docs/adr/0001-project-charter.md"
+      ],
+      "goal_id": "system",
       "human_gate": true,
       "id": "1.1.2",
+      "kind": "documentation",
+      "required_verifiers": [],
+      "risk": "normal",
+      "scope_hints": [
+        "docs/adr/0001-project-charter.md"
+      ],
+      "size_signals": {
+        "acceptance_items": 1,
+        "scope_hints": 1,
+        "subsystems": 1,
+        "verifier_count": 0
+      },
       "status": "done",
-      "title": "Review and accept the project charter",
-      "verification": "A human confirms scope, goals, non-goals, constraints, and selected modules."
+      "title": "Review and accept the project charter"
     },
     {
-      "artifact": "docs/product/requirements.md",
+      "acceptance": [
+        "The artifact contains project-specific decisions, risks, and observable completion evidence."
+      ],
+      "completion_receipts": [
+        "f3a04373f3056c566c9869fe567e157c452ef83c45e95c1ffb71f632ce2007e2"
+      ],
+      "deliverable_id": "module-product",
+      "dependency_rationale": {
+        "1.1.2": "SVK setup prerequisite."
+      },
       "depends_on": [
         "1.1.2"
       ],
+      "expected_artifacts": [
+        "docs/product/requirements.md"
+      ],
+      "goal_id": "system",
       "human_gate": false,
       "id": "2.1.1",
+      "kind": "documentation",
+      "required_verifiers": [
+        "svk-governed"
+      ],
+      "risk": "normal",
+      "scope_hints": [
+        "docs/product/requirements.md"
+      ],
+      "size_signals": {
+        "acceptance_items": 1,
+        "scope_hints": 1,
+        "subsystems": 1,
+        "verifier_count": 1
+      },
       "status": "done",
-      "title": "Confirm requirements and acceptance criteria",
-      "verification": "The artifact contains project-specific decisions and evidence."
+      "title": "Confirm requirements and acceptance criteria"
     },
     {
-      "artifact": "Implementation and tests for: Add a task and save it locally",
-      "depends_on": [
-        "2.1.1"
+      "acceptance": [
+        "Blank task text is rejected without changing data.",
+        "Valid tasks receive increasing integer IDs.",
+        "Writes replace the JSON file atomically."
       ],
+      "completion_receipts": [
+        "19cbc9adfa274987a126145d820bc081bb5b98440635df374af9e75fcc9a86cb"
+      ],
+      "deliverable_id": "add-command",
+      "dependency_rationale": {},
+      "depends_on": [],
+      "expected_artifacts": [
+        "pocket_list.py"
+      ],
+      "goal_id": "goal-1",
       "human_gate": false,
       "id": "3.1.1",
+      "kind": "implementation",
+      "required_verifiers": [
+        "pocket-tests"
+      ],
+      "risk": "low",
+      "scope_hints": [
+        "pocket_list.py"
+      ],
+      "size_signals": {
+        "acceptance_items": 3,
+        "scope_hints": 1,
+        "subsystems": 1,
+        "verifier_count": 1
+      },
       "status": "done",
-      "title": "Implement and verify: Add a task and save it locally",
-      "verification": "The goal has observable passing evidence and respects the accepted constraints."
+      "title": "Implement atomic task creation and JSON persistence"
     },
     {
-      "artifact": "Implementation and tests for: List unfinished tasks after restarting the program",
+      "acceptance": [
+        "Tests cover reload, blank input, malformed data, and CLI output."
+      ],
+      "completion_receipts": [
+        "2afafaccf3451222b4c08d09884a2b5aecfbf35bd4a7e6089583a7bc7ca4e795"
+      ],
+      "deliverable_id": "add-command",
+      "dependency_rationale": {
+        "3.1.1": "The persistence behavior must exist before its regression suite is finalized."
+      },
       "depends_on": [
         "3.1.1"
       ],
+      "expected_artifacts": [
+        "tests/test_pocket_list.py"
+      ],
+      "goal_id": "goal-1",
       "human_gate": false,
-      "id": "3.2.1",
-      "status": "in_progress",
-      "title": "Implement and verify: List unfinished tasks after restarting the program",
-      "verification": "The goal has observable passing evidence and respects the accepted constraints."
+      "id": "3.1.2",
+      "kind": "verification",
+      "required_verifiers": [
+        "pocket-tests"
+      ],
+      "risk": "low",
+      "scope_hints": [
+        "pocket_list.py",
+        "tests/test_pocket_list.py"
+      ],
+      "size_signals": {
+        "acceptance_items": 1,
+        "scope_hints": 2,
+        "subsystems": 1,
+        "verifier_count": 1
+      },
+      "status": "done",
+      "title": "Lock in add-command persistence regressions"
     },
     {
-      "artifact": "Implementation and tests for: Mark a task complete without losing other tasks",
+      "acceptance": [
+        "Only unfinished tasks are listed after a fresh process reads the saved file."
+      ],
+      "completion_receipts": [],
+      "deliverable_id": "list-command",
+      "dependency_rationale": {
+        "3.1.2": "Listing builds on the validated storage contract."
+      },
+      "depends_on": [
+        "3.1.2"
+      ],
+      "expected_artifacts": [
+        "pocket_list.py",
+        "tests/test_pocket_list.py"
+      ],
+      "goal_id": "goal-2",
+      "human_gate": false,
+      "id": "3.2.1",
+      "kind": "implementation",
+      "required_verifiers": [
+        "pocket-tests"
+      ],
+      "risk": "low",
+      "scope_hints": [
+        "pocket_list.py",
+        "tests/test_pocket_list.py"
+      ],
+      "size_signals": {
+        "acceptance_items": 1,
+        "scope_hints": 2,
+        "subsystems": 1,
+        "verifier_count": 1
+      },
+      "status": "in_progress",
+      "title": "Implement restart-safe unfinished-task listing"
+    },
+    {
+      "acceptance": [
+        "Completing one known ID changes only that task.",
+        "Unknown IDs fail without changing the file."
+      ],
+      "completion_receipts": [],
+      "deliverable_id": "complete-command",
+      "dependency_rationale": {
+        "3.2.1": "Completion uses the same validated read/list storage flow."
+      },
       "depends_on": [
         "3.2.1"
       ],
+      "expected_artifacts": [
+        "pocket_list.py",
+        "tests/test_pocket_list.py"
+      ],
+      "goal_id": "goal-3",
       "human_gate": false,
       "id": "3.3.1",
+      "kind": "implementation",
+      "required_verifiers": [
+        "pocket-tests"
+      ],
+      "risk": "low",
+      "scope_hints": [
+        "pocket_list.py",
+        "tests/test_pocket_list.py"
+      ],
+      "size_signals": {
+        "acceptance_items": 2,
+        "scope_hints": 2,
+        "subsystems": 1,
+        "verifier_count": 1
+      },
       "status": "pending",
-      "title": "Implement and verify: Mark a task complete without losing other tasks",
-      "verification": "The goal has observable passing evidence and respects the accepted constraints."
+      "title": "Implement lossless task completion"
     },
     {
-      "artifact": "docs/verification.md",
+      "acceptance": [
+        "Every approved release verifier passes against the current project inputs."
+      ],
+      "completion_receipts": [],
+      "deliverable_id": "release",
+      "dependency_rationale": {
+        "3.1.1": "Release readiness requires every approved project task to be complete.",
+        "3.1.2": "Release readiness requires every approved project task to be complete.",
+        "3.2.1": "Release readiness requires every approved project task to be complete.",
+        "3.3.1": "Release readiness requires every approved project task to be complete."
+      },
       "depends_on": [
+        "3.1.1",
+        "3.1.2",
+        "3.2.1",
         "3.3.1"
       ],
+      "expected_artifacts": [
+        "docs/verification.md"
+      ],
+      "goal_id": "system",
       "human_gate": false,
       "id": "4.1.1",
+      "kind": "verification",
+      "required_verifiers": [
+        "svk-governed",
+        "pocket-tests"
+      ],
+      "risk": "normal",
+      "scope_hints": [
+        "docs/verification.md"
+      ],
+      "size_signals": {
+        "acceptance_items": 1,
+        "scope_hints": 1,
+        "subsystems": 1,
+        "verifier_count": 2
+      },
       "status": "pending",
-      "title": "Run the release-readiness verification gate",
-      "verification": "All required checks pass and evidence is recorded."
+      "title": "Run the release-readiness verification gate"
     }
   ],
-  "updated_at": "2026-08-23T14:00:09Z"
+  "updated_at": "2026-08-30T21:39:12Z"
 }

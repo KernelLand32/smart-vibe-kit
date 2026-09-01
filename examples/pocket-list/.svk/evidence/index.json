@@ -1,0 +1,62 @@
+{
+  "kit_version": "2.1.0",
+  "project": "pocket-list",
+  "records": [
+    {
+      "actor": "svk-interview",
+      "artifacts": [
+        ".svk/project.json",
+        ".svk/plan.json"
+      ],
+      "id": "attestation-interview",
+      "kind": "attestation",
+      "recorded_at": "2026-08-30T21:39:00Z",
+      "result": "recorded",
+      "summary": "Project interview, adaptive profile, and approved structured plan were recorded.",
+      "task_id": "1.1.1"
+    },
+    {
+      "actor": "interview-human-attestation",
+      "artifacts": [
+        "docs/adr/0001-project-charter.md"
+      ],
+      "id": "attestation-charter",
+      "kind": "attestation",
+      "recorded_at": "2026-08-30T21:39:00Z",
+      "result": "recorded",
+      "summary": "The caller recorded that a human accepted the charter during Interview.",
+      "task_id": "1.1.2"
+    },
+    {
+      "id": "f3a04373f3056c566c9869fe567e157c452ef83c45e95c1ffb71f632ce2007e2",
+      "kind": "verification",
+      "path": ".svk/evidence/runs/f3a04373f3056c566c9869fe567e157c452ef83c45e95c1ffb71f632ce2007e2/receipt.json",
+      "receipt_sha256": "ef623800499244aba6c8831b1e218a0eaf558754ea9a954f039fa344ce994a28",
+      "recorded_at": "2026-08-30T21:39:10Z",
+      "result": "pass",
+      "task_id": "2.1.1",
+      "verifier_id": "svk-governed"
+    },
+    {
+      "id": "19cbc9adfa274987a126145d820bc081bb5b98440635df374af9e75fcc9a86cb",
+      "kind": "verification",
+      "path": ".svk/evidence/runs/19cbc9adfa274987a126145d820bc081bb5b98440635df374af9e75fcc9a86cb/receipt.json",
+      "receipt_sha256": "57ef59e673fe70a7894d2351d3db4373070870cea25c62e897b86e012850897a",
+      "recorded_at": "2026-08-30T21:39:11Z",
+      "result": "pass",
+      "task_id": "3.1.1",
+      "verifier_id": "pocket-tests"
+    },
+    {
+      "id": "2afafaccf3451222b4c08d09884a2b5aecfbf35bd4a7e6089583a7bc7ca4e795",
+      "kind": "verification",
+      "path": ".svk/evidence/runs/2afafaccf3451222b4c08d09884a2b5aecfbf35bd4a7e6089583a7bc7ca4e795/receipt.json",
+      "receipt_sha256": "6fba87865f69b2c1245f8bafae68ed310bad486206278e7e42ab437ef6fed695",
+      "recorded_at": "2026-08-30T21:39:12Z",
+      "result": "pass",
+      "task_id": "3.1.2",
+      "verifier_id": "pocket-tests"
+    }
+  ],
+  "schema_version": "2.1"
+}

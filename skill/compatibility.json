@@ -1,7 +1,7 @@
 {
-  "schema_version": "2.0",
-  "kit_version": "2.0.0",
-  "evaluated_on": "2026-08-23",
+  "schema_version": "2.1",
+  "kit_version": "2.1.0",
+  "evaluated_on": "2026-08-30",
   "default_target": "agents",
   "logical_actions": ["svk-interview", "svk-refresh", "svk-next", "svk-check"],
   "claim_policy": "Compatibility follows published harness behavior unless runtime_tested is true. Model-family compatibility depends on the harness.",
@@ -62,13 +62,14 @@
       "evidence_url": "https://antigravity.google/docs/skills"
     },
     "grok": {
-      "user_root": "~/.agents/skills",
-      "project_root": ".agents/skills",
+      "user_root": "~/.grok/skills",
+      "project_root": ".grok/skills",
       "invocation": "/{skill}",
       "frontmatter_policy_key": "disable-model-invocation",
       "status": "contract-compatible-untested",
       "runtime_tested": false,
-      "evidence_url": "https://github.com/xai-org/grok-build/blob/main/crates/codegen/xai-grok-pager/docs/user-guide/08-skills.md"
+      "evidence_url": "https://github.com/xai-org/grok-build/blob/main/crates/codegen/xai-grok-pager/docs/user-guide/08-skills.md",
+      "notes": "Grok also scans .agents, Claude, and Cursor skill roots, but its native root is used for direct installation."
     },
     "copilot": {
       "user_root": "~/.agents/skills",
@@ -105,6 +106,16 @@
       "status": "partial-untested",
       "runtime_tested": false,
       "evidence_url": "https://opencode.ai/docs/skills"
+    },
+    "pi": {
+      "user_root": "~/.pi/agent/skills",
+      "project_root": ".pi/skills",
+      "invocation": "/skill:{skill} or automatic loading",
+      "frontmatter_policy_key": "disable-model-invocation",
+      "status": "contract-compatible-untested",
+      "runtime_tested": false,
+      "evidence_url": "https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/skills.md",
+      "notes": "Pi also scans the shared ~/.agents/skills and .agents/skills roots."
     },
     "goose": {
       "user_root": "~/.agents/skills",

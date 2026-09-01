@@ -1,4 +1,4 @@
-# Smart Vibe Kit 2.0.0
+# Smart Vibe Kit 2.1.0
 
 **Give an AI agent a project it can understand, continue, and hand off.**
 
@@ -182,7 +182,7 @@ Next task: 1.1.2 — Review and accept the project charter
 
 Why did it select Product? Because this is a user-facing tool with behaviors that need requirements and acceptance examples. Why did it not select Design, Operations, Security, or Collaboration? The idea has no graphical interface, deployment, sensitive data, or team workflow.
 
-The **Lean** label summarizes the selection. The useful output is the recorded scope, non-goals, task sequence, verification rules, and one active task. Interview also created three implementation tasks from the three accepted goals, followed by a release-readiness task.
+The **Lean** label summarizes the selected project areas. Interview separately proposed a reviewed plan with three deliverables and four bounded tasks. The first deliverable deliberately has distinct implementation and regression-verification tasks; profile size does not dictate task depth.
 
 ### SVK Next
 
@@ -191,7 +191,7 @@ Next performs the one task that the project currently identifies. It does not ch
 The first task is charter review. Beginning it without human approval produces this refusal:
 
 ```text
-Task 1.1.2 is a human gate; begin again with explicit --allow-human-gate.
+Task 1.1.2 is a human gate; explicit human attestation is required.
 ```
 
 That is expected behavior. The tool prepared the charter; it did not approve the charter on the user’s behalf.
@@ -210,24 +210,25 @@ The second Next run worked on task `2.1.1`. It turned the idea into seven behavi
 Completed: 2.1.1 — Confirm requirements and acceptance criteria
 Changed:   docs/product/requirements.md
            docs/product/acceptance.md
-Promoted:  3.1.1 — Implement and verify: Add a task and save it locally
+Promoted:  3.1.1 — Implement atomic task creation and JSON persistence
 Check:     PASS
 Stopped:   yes
 ```
 
-The third Next run moved from planning into application code. It implemented only the `add` goal, including strict JSON validation, atomic local writes, four tests, and a command-line smoke check:
+The third Next run moved from planning into application code. It implemented only atomic creation and storage, then ran the registered test verifier through SVK:
 
 ```text
-Completed: 3.1.1 — Implement and verify: Add a task and save it locally
+Completed: 3.1.1 — Implement atomic task creation and JSON persistence
 Changed:   pocket_list.py
            tests/test_pocket_list.py
 Tests:     4 passed
-Promoted:  3.2.1 — Implement and verify: List unfinished tasks after restarting the program
+Receipt:   19cbc9ad…
+Promoted:  3.1.2 — Lock in add-command persistence regressions
 Check:     PASS
 Stopped:   yes
 ```
 
-This is the intended unit of autonomy: understand one task, do its project work, verify it, update the durable record, and return control to the user. The three Next runs were separate actions; none continued into the task it had just promoted.
+A fourth Next run completed the focused regression task with a second fresh receipt, then promoted `3.2.1 — Implement restart-safe unfinished-task listing`. This is the intended unit of autonomy: understand one bounded task, do its project work, have SVK run the required checks, update the durable record, and return control. None continued into the task it had just promoted.
 
 If the work cannot be completed, Next records the blocker and leaves that task as the next action. It never treats “blocked” as “skip this and carry on.”
 
@@ -235,14 +236,15 @@ If the work cannot be completed, Next records the blocker and leaves that task a
 
 Refresh answers, “If I opened this folder with no previous conversation, what would I need to know right now?” It reads the project and does not change it.
 
-After the three Next runs above, Refresh returned:
+After those Next runs, Refresh returned:
 
 ```text
 Project: Pocket List
 Profile: Lean
 Areas: Core, Product
 Stage: execution
-Active task: 3.2.1 — Implement and verify: List unfinished tasks after restarting the program
+State revision: 7
+Active task: 3.2.1 — Implement restart-safe unfinished-task listing
 Blocker: none
 Health check: PASS
 ```
@@ -262,12 +264,12 @@ On the healthy Pocket List project, it returned:
 }
 ```
 
-For example, changing task `3.2.1` to `pending` in `docs/tasks.md` while the machine state still calls it `in_progress` produces this diagnostic:
+For example, changing the generated `docs/tasks.md` without changing revisioned state produces this diagnostic:
 
 ```text
-Code:    SVK-TASK-STATUS-DRIFT
+Code:    SVK-GENERATED-DRIFT
 Level:   ERROR
-Message: docs/tasks.md statuses differ from state.
+Message: Generated projection differs from current state.
 Path:    docs/tasks.md
 Result:  ERROR
 ```
@@ -305,8 +307,12 @@ docs/verification.md             how the project will be checked
 docs/adr/0001-project-charter.md the initial project decision record
 
 .svk/project.json                the project description and selected modules
-.svk/state.json                  the current stage and next action
-.svk/evidence.jsonl              evidence from completed tasks
+.svk/plan.json                   the approved goals, deliverables, and bounded tasks
+.svk/verifiers.json              commands SVK may run to verify work
+.svk/state.json                  the revisioned stage, tasks, and next action
+.svk/governance.json             the role and integrity policy for each managed file
+.svk/evidence/index.json         attestations and SVK-created receipt records
+.svk/interview/session.json      the completed durable Interview checkpoint
 .svk/install.json                information about the scaffold installation
 ```
 
@@ -334,19 +340,19 @@ Interview creates these as working documents filled with project-specific inform
 The count is calculated from three parts:
 
 1. **Six core documents** are created for every project: `AGENTS.md`, the constitution, task list, document registry, project charter, and verification plan.
-2. **Four machine-readable records** track the project description, current state, evidence, and SVK installation under `.svk/`.
+2. **Eight machine-readable records** track the profile, approved plan, verifiers, revisioned state, governance policy, evidence, Interview checkpoint, and installation under `.svk/`.
 3. **Optional areas** add their working documents. Most add two; the Regulated area adds three.
 
 That produces counts such as:
 
 | Selected structure | Calculation | SVK-managed artifacts |
 |---|---:|---:|
-| Core only | 6 core documents + 4 state records | **10** |
-| Core + Product, as in Pocket List | 6 + 4 + 2 Product documents | **12** |
-| Core + Product + Design + Engineering + Operations | 6 + 4 + 8 area documents | **18** |
-| Core + every optional area | 6 + 4 + 17 area documents | **27** |
+| Core only | 6 core documents + 8 state records | **14** |
+| Core + Product, as in Pocket List | 6 + 8 + 2 Product documents | **16** |
+| Core + Product + Design + Engineering + Operations | 6 + 8 + 8 area documents | **22** |
+| Core + every optional area | 6 + 8 + 17 area documents | **31** |
 
-So “30 files” is a rounded way of saying “nearly the full scaffold”; it is not an exact tier or a target. In version 2.0.0, selecting every area produces 27 managed artifacts. SVK may also create internal baseline and transaction records under `.svk/`, so the number shown by your file browser can be higher than the `expected_document_count` in `.svk/project.json`.
+So “10 files or 30 files” remains conversational shorthand, not a target or tier. In version 2.1.0, the smallest scaffold has 14 managed artifacts and selecting every area produces 31. Receipt directories and transaction records are operational history, so the number shown by a file browser can be higher than `expected_document_count`.
 
 The useful question is therefore not “How many files should this project have?” It is “Which decisions must remain clear when another person, model, or session continues the work?” The selected areas answer that question; the file count simply follows from them.
 
@@ -365,7 +371,7 @@ The profile is calculated from the selected areas. SVK does not select a profile
 
 ## Requirements
 
-- Python 3.8 or newer
+- Python 3.11 or newer
 - No third-party Python packages
 - The complete release folder, with `installer/` and `skill/` beside each other
 
@@ -450,7 +456,7 @@ Preview an installation without writing anything:
 python installer/install.py --target all --dry-run
 ```
 
-Run the same installation command again to update an existing SVK 2.x installation.
+Run the same command again for a clean 2.1 reinstall. Replacing an owned 2.0 installation is a separate human gate and is refused unless you explicitly add `--approve-upgrade`. If an owned installation has local drift, the installer also refuses until `--preserve-local-changes` is supplied; that option retains a sibling backup instead of silently discarding the edits.
 
 Remove an installation:
 
@@ -482,6 +488,7 @@ The examples below show the exact form to use. If you installed SVK while the ha
 | [Gemini CLI](https://geminicli.com/docs/cli/using-agent-skills/) | `gemini` | Ask it to activate and run `svk-interview` | `/skills list` or `/skills reload` |
 | [Google Antigravity](https://antigravity.google/docs/skills) | `antigravity` | Ask it to use `svk-interview` | Skills UI or a new session |
 | [OpenCode](https://opencode.ai/docs/skills/) | `opencode` | Ask it to load and use `svk-interview` | Ask which skills are available |
+| [Pi](https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/skills.md) | `pi` | `/skill:svk-interview Your idea` | `/settings` or inspect loaded skills |
 | [Goose](https://goose-docs.ai/docs/guides/context-engineering/using-skills/) | `goose` | `/skills svk-interview`, then send the idea | `/skills` or `goose skills list` |
 | [Roo Code](https://docs.roocode.com/features/skills) | `roo` | Ask it to use `svk-interview` | Restart or check the discovered skills |
 | [Junie](https://junie.jetbrains.com/docs/agent-skills.html) | `junie` | `/svk-interview Your idea` or `$svk-interview` | `/skills` |
@@ -529,7 +536,7 @@ Use `/skills` to view or manage them. If `.claude/skills` did not exist when Cla
 
 ### Grok Build
 
-Install with `--target grok`. SVK uses the shared `.agents/skills` path, which Grok Build discovers alongside its native `.grok/skills` path.
+Install with `--target grok`. SVK uses Grok Build's native `.grok/skills` path. Grok also documents compatibility scanning for `.agents`, Claude, and Cursor skill roots, but the native location keeps direct installations unambiguous.
 
 Invoke the actions with `/svk-interview`, `/svk-refresh`, `/svk-next`, and `/svk-check`. Use `grok inspect` or `grok inspect --json` to confirm discovery.
 
@@ -603,6 +610,19 @@ Load and use the svk-interview skill for this idea: Build a private offline-firs
 
 If it is not found, check OpenCode’s `skill` permissions. A matching `deny` rule hides a skill completely.
 
+### Pi
+
+Install with `--target pi`. Pi's native user location is `~/.pi/agent/skills` and its project location is `.pi/skills`; it also scans the shared `.agents/skills` convention. Invoke a skill explicitly with:
+
+```text
+/skill:svk-interview Build a private offline-first notes app.
+/skill:svk-refresh
+/skill:svk-next
+/skill:svk-check
+```
+
+Pi can also load a matching skill automatically. SVK's installed policy marks these four actions explicit-only, so use the `/skill:` form.
+
 ### Goose
 
 Install with `--target goose`. Goose uses the shared `.agents/skills` location. In the CLI, load Interview and then send the idea:
@@ -660,7 +680,7 @@ Install with `--target kiro`. Kiro reads `.kiro/skills` and activates relevant s
 Use the svk-interview skill for this idea: Build a private offline-first notes app.
 ```
 
-Use the Agent Steering & Skills section in the Kiro panel to inspect, import, or manage the installation. SVK does not claim a direct `/svk-interview` form for Kiro 2.0.0.
+Use the Agent Steering & Skills section in the Kiro panel to inspect, import, or manage the installation. SVK does not claim a direct `/svk-interview` form for Kiro 2.1.0.
 
 ### Windsurf / Cascade
 
@@ -792,7 +812,7 @@ Before writing files, the agent should summarize what it understood, which proje
 
 ### 4. Review the project charter
 
-The project charter is the initial agreement about what you are building. In 2.0.0, reviewing it through task `1.1.2` is the normal path after Interview.
+The project charter is the initial agreement about what you are building. In 2.1.0, Interview first requires explicit review of the structured plan; reviewing the generated charter through task `1.1.2` remains the normal next human gate.
 
 This is intentional. Starting an interview means “help me prepare this project,” not “approve every decision for me.”
 
@@ -864,24 +884,15 @@ A completed task moves at most one dependency-ready task from `pending` to `in_p
 
 ### Locks
 
-When Next begins work, it creates `.svk/locks/next.json`. The lock records the task and its owner so two agents do not work on the same task at the same time.
+When Next begins work, a short transition lock serializes task selection and then creates `.svk/locks/next.json`. The lease records the task, owner, expiry, and exact `state_revision`, so a stale caller cannot finish against newer state.
 
 A lock that appears old is not automatic permission to take over. First confirm that the owning agent is no longer working. Forced lock removal is an explicit recovery action.
 
 ### Evidence
 
-To finish a task, the agent records:
+Each ordinary task names required verifiers in `.svk/plan.json`. Next asks SVK to run those registered checks; the runtime does not accept an agent-authored `"result": "pass"`. A verifier runs without a shell, with a bounded timeout and constrained environment, then records its command, executable, exit status, output digests, input fingerprint, and artifact digests in `.svk/evidence/runs/<receipt-id>/receipt.json`. The evidence index binds that receipt path and its SHA-256 digest, so changing the receipt after the run invalidates it.
 
-```json
-{
-  "summary": "What was established or changed",
-  "commands": ["Commands, tools, or checks actually used"],
-  "artifacts": ["Relevant files or external evidence"],
-  "result": "pass"
-}
-```
-
-`result` can be `pass`, `fail`, or `partial`, but only `pass` can complete a task. The runtime adds the task ID, owner, and time before appending the record to `.svk/evidence.jsonl`.
+Finish requires the receipt IDs. SVK checks that each receipt belongs to the active task, covers every required verifier, passed, and still matches the task inputs. Human gates use a separately labelled cooperative attestation; an owner string or actor label is not authenticated identity.
 
 ## Use the Python runtime directly
 
@@ -892,39 +903,29 @@ Run them from the release root.
 ### Show the standard interview topics
 
 ```text
-python skill/runtime/svk.py interview --questions
+python skill/runtime/svk.py interview questions
 ```
+
+For a long Interview, save and resume sections before scaffolding:
+
+```text
+python skill/runtime/svk.py interview --root /path/to/project start --idea "Your project idea"
+python skill/runtime/svk.py interview --root /path/to/project checkpoint --section project --answers /path/to/project-section.json
+python skill/runtime/svk.py interview --root /path/to/project show
+```
+
+The checkpoint is a clearly owned sibling file; the greenfield target stays untouched until `scaffold` succeeds.
 
 ### Prepare interview answers
 
-The runtime accepts a JSON file. Only `title` and `idea` are required, but fuller answers produce a better scaffold.
-
-```json
-{
-  "title": "Offline Notes",
-  "idea": "Build a private offline-first notes application.",
-  "goals": ["Create and search local notes"],
-  "non_goals": ["No hosted collaboration in the first release"],
-  "constraints": ["Run on Windows, macOS, and Linux"],
-  "platforms": ["Windows", "macOS", "Linux"],
-  "integrations": [],
-  "team_size": 1,
-  "risk": "low",
-  "research_tier": 0,
-  "user_facing": true,
-  "ui": true,
-  "deployable": false,
-  "sensitive_data": false,
-  "regulated": false
-}
-```
+The runtime accepts a JSON file after Interview has produced a structured proposal. Project facts alone are not enough in 2.1: the object also needs an approved `plan`, a verifier registry, `plan_approved`, `plan_reviewer`, and `plan_review_reason`. See the complete, executable [Pocket List input](examples/pocket-list/interview-answers.json) rather than copying an incomplete fragment.
 
 Optional `include_modules` and `exclude_modules` arrays can refine the result. An exclusion cannot remove an area required by the stated project facts, including integrations, team size, research tier, sensitive data, deployment, or regulation.
 
 ### Create the scaffold
 
 ```text
-python skill/runtime/svk.py interview --root /path/to/project --answers /path/to/answers.json
+python skill/runtime/svk.py interview --root /path/to/project scaffold --answers /path/to/answers.json
 ```
 
 The normal workflow creates a proposed charter, lets a person review it, and finishes task `1.1.2` through Next. The lower-level `--charter-accepted` option is intended only for controlled automation that has already captured explicit human approval; it marks the charter complete and promotes the first dependency-ready task during scaffold creation.
@@ -934,7 +935,10 @@ The normal workflow creates a proposed charter, lets a person review it, and fin
 ```text
 python skill/runtime/svk.py refresh --root /path/to/project
 python skill/runtime/svk.py check --root /path/to/project
+python skill/runtime/svk.py check --root /path/to/project --scope all-docs
 ```
+
+The default check audits governed Markdown. `--scope all-docs` additionally reports placeholders and broken local links in unrelated Markdown without changing which files SVK governs.
 
 ### View and begin the active task
 
@@ -946,17 +950,18 @@ python skill/runtime/svk.py next --root /path/to/project begin --owner my-agent
 If a human has agreed to enter a human-approval task:
 
 ```text
-python skill/runtime/svk.py next --root /path/to/project begin --owner my-agent --allow-human-gate
+python skill/runtime/svk.py next --root /path/to/project begin --owner my-agent --allow-human-gate --human-actor "Alice" --human-reason "I reviewed and accept the charter"
 ```
 
 This flag records that the human agreed to enter the task. It does not let the agent make the approval itself.
 
 ### Finish or block a task
 
-After doing the work, create the evidence JSON and finish with the same owner and task ID:
+After doing the work, run each verifier and finish with the returned receipt IDs:
 
 ```text
-python skill/runtime/svk.py next --root /path/to/project finish --owner my-agent --task 1.1.2 --evidence /path/to/evidence.json
+python skill/runtime/svk.py next --root /path/to/project verify --owner my-agent --task 3.1.1 --verifier unit-tests
+python skill/runtime/svk.py next --root /path/to/project finish --owner my-agent --task 3.1.1 --receipts <receipt-id>
 ```
 
 If the task cannot be completed:
@@ -979,13 +984,35 @@ Use `--force` only after confirming that no agent is still working under the loc
 python skill/runtime/svk.py next --root /path/to/project clear-lock --force
 ```
 
+### Inspect recovery before changing anything
+
+```text
+python skill/runtime/svk.py recover --root /path/to/project inspect
+```
+
+Narrow recovery actions—indexing an otherwise valid orphan receipt, rolling back a journaled interrupted transition, or clearing an expired lease—each require their own `--approve` flag. Inspect is read-only.
+
+### Migrate an SVK 2.0 project
+
+```text
+python skill/runtime/svk.py migrate --root /path/to/project inspect
+python skill/runtime/svk.py migrate --root /path/to/project plan
+python skill/runtime/svk.py migrate --root /path/to/project apply --approve
+```
+
+Inspect and plan are read-only. Apply refuses unknown custom fields, preserves user-edited governed documents, stores the legacy manifest and evidence as migration provenance, and leaves a sibling backup that can be supplied to `migrate rollback --backup <path> --approve`.
+
+### Make one reviewed plan edit
+
+`plan` accepts one JSON edit whose operation is `insert`, `add-dependency`, `supersede`, or `split`. It can change pending work only, is refused while a task lease exists, requires reviewer/reason fields and `--approve`, increments `state_revision`, and writes a transaction record.
+
 ### Verify the distributable skill package
 
 ```text
 python skill/runtime/svk.py check --package --root skill
 ```
 
-The runtime prints JSON. Project checks return a nonzero exit code for `ERROR` or `BLOCKED` results.
+The runtime prints versioned JSON containing the logical `command`, a stable `result`, diagnostics, and either `value` or `error`. Project checks return a nonzero exit code for `ERROR` or `BLOCKED` results, and invalid command syntax is returned as a JSON contract error rather than host-specific argparse prose.
 
 ## Safety
 
@@ -1004,9 +1031,9 @@ It also records enough transaction information for Check to detect an interrupte
 
 ### Installing the skills
 
-The installer validates all four skills before writing them. It stages a multi-target install before committing it and rolls back if a later destination fails.
+The installer validates all four skills before writing them. It rejects symbolic links and reparse points at installation boundaries, stages a multi-target install before committing it, and rolls back if a later destination fails.
 
-It only updates or removes directories carrying an SVK ownership marker. A folder with the same name but no marker is left alone.
+It only updates or removes directories carrying a complete SVK ownership marker. The marker binds the canonical entry name and kind, SVK version, transaction-wide installation ID, canonical destination fingerprint, supported upgrade source, and managed bytes. A folder with no valid marker is left alone; a 2.0 marker, forged field, wrong destination, or digest drift triggers the explicit gates described above.
 
 ### What an SVK action does not authorize
 
@@ -1020,7 +1047,7 @@ For example, a Qwen model running inside Qwen Code has Qwen Code’s skill suppo
 
 ### Compatibility levels in this release
 
-- **Direct, documented selectors:** Codex, Cursor, Claude Code, Grok Build, Qwen Code, Kimi Code CLI, Junie, Cline, and Windsurf document a direct skill reference, slash form, or mention.
+- **Direct, documented selectors:** Codex, Cursor, Claude Code, Grok Build, Qwen Code, Kimi Code CLI, Pi, Junie, Cline, and Windsurf document a direct skill reference, slash form, or mention.
 - **Activation through the host:** GitHub Copilot CLI, Gemini CLI, Antigravity, OpenCode, Goose, Roo, and Kiro support the skill files but use a named request, model activation, a management command, consent, or a skills interface.
 - **Manual use:** Aider and raw model APIs do not provide all the pieces SVK needs by themselves. Use the Python runtime or add an adapter that provides skill discovery, files, and tools.
 
@@ -1043,19 +1070,19 @@ In practice, a model and harness combination must be able to:
 
 ### Operating systems
 
-The runtime and installer require Python 3.8+ and use only the standard library. Windows has been exercised for 2.0.0. The repository includes a [Windows, macOS, and Linux CI matrix](.github/workflows/ci.yml) for Python 3.8 and 3.12; macOS and Linux remain preview support until those published CI runs are available.
+The runtime and installer require Python 3.11+ and use only the standard library. This development copy has been exercised locally on Windows with Python 3.11, 3.12, and 3.14, and on Linux through WSL with Python 3.12. The repository defines [Windows, macOS, and Linux CI](.github/workflows/ci.yml) for Python 3.11 and 3.14, but those definitions are not evidence that a public CI run passed; macOS and every compatibility row with `runtime_tested: false` remain untested claims.
 
 ## Current limitations
 
-SVK 2.0.0 deliberately has a narrow first workflow:
+SVK 2.1.0 deliberately keeps several boundaries:
 
-- Interview is for a new or unscaffolded project. It does not merge an existing governance system or migrate an SVK 1.x project.
-- The questions and answers are held by the current conversation until the final answers file is submitted. An interrupted interview cannot yet resume from a saved midpoint.
+- Interview is for a new or unscaffolded project. The migration command upgrades a known SVK 2.0 contract; it does not merge an arbitrary mature repository's existing governance system or migrate SVK 1.x.
+- Interview checkpoints are resumable, but the model still has to conduct the semantic interview and propose the plan; the Python runtime does not invent project meaning.
 - SVK can decide that research records are needed, but the Python runtime does not browse the web itself. The agent must carry out and cite the research.
 - Next manages the task lifecycle, but the agent still performs the actual project-specific work.
 - There is no “keep going until everything is finished” command.
 - Refresh never upgrades project files.
-- The initial file hashes are stored, but 2.0.0 does not yet provide a three-way upgrade or automatic reconciliation workflow.
+- Role-aware governance distinguishes generated views, mutable state, append-only evidence, immutable provenance, and user-governed documents. It does not attempt automatic three-way reconciliation of conflicting semantic edits.
 - Harness paths and invocation forms have been checked against their published documentation, but every row with `runtime_tested: false` remains a beta integration until exercised inside that harness.
 
 ## Troubleshooting
@@ -1080,7 +1107,7 @@ Another agent may still be working. Confirm its status before removing the lock.
 
 ### Check reports an interrupted transaction
 
-Do not start another task. Read the paths and transaction ID in the diagnostic, inspect the affected files, and reconcile that specific interruption. SVK detects the condition but does not guess how every partial update should be repaired.
+Do not start another task. Run `recover inspect` first. If the journal has a complete state snapshot, the explicit `rollback-transactions --approve` action can restore it; SVK refuses automatic recovery when the evidence is insufficient.
 
 ### Check reports that tasks, the charter, or evidence disagree
 
@@ -1088,11 +1115,11 @@ Check is showing that two records tell different stories. Repair the specific re
 
 ### Can I use SVK in an existing repository?
 
-The runtime can add its files if none of the destination paths exist, but Interview does not yet analyze and merge a mature project’s current plans, rules, or documentation. Treat 2.0.0 as a new-project tool unless you have manually confirmed that the repository has no conflicting operating structure.
+Interview deliberately refuses an existing project. Version 2.1 can migrate a recognized SVK 2.0 project, preserving its user-edited governed documents, but it does not infer how to merge SVK into an unrelated mature repository. Use a dedicated greenfield folder or wait for an explicit adoption workflow.
 
 ### Why did my project get more or fewer files than expected?
 
-First, make sure you are comparing the same thing. `expected_document_count` counts the six core documents, four machine-state records, and documents added by the selected areas. It does not count your application code, tests, assets, dependencies, or SVK’s internal baseline and transaction records. See [Where do the file counts come from?](#where-do-the-file-counts-come-from) for examples.
+First, make sure you are comparing the same thing. `expected_document_count` counts six core documents, eight machine-readable records, and documents added by selected areas. It does not count application code, tests, assets, dependencies, receipts, or transaction history. See [Where do the file counts come from?](#where-do-the-file-counts-come-from).
 
 Then open `.svk/project.json` and look at `signals`, `modules`, and `profile`. They show what SVK understood about the project and which areas it selected. The `expected_document_count` value shows the resulting managed-artifact count.
 
@@ -1107,7 +1134,7 @@ Yes—that is the purpose of the durable project state. Install SVK for the new 
 The implementation is split into two top-level packages. A worked project is included separately:
 
 ```text
-smart-vibe-kit-200/
+smart-vibe-kit-201/
   examples/
     pocket-list/  worked project used by the README walkthrough
   installer/   installation, updates, removal, host paths, and installer tests
@@ -1134,7 +1161,7 @@ Validate the package:
 python skill/runtime/svk.py check --package --root skill
 ```
 
-The CI template runs these checks across Windows, macOS, and Linux on Python 3.8 and 3.12. Use that matrix, or run the commands above with a local Python 3.8 interpreter, to verify Python 3.8 compatibility.
+The CI definitions run these checks across Windows, macOS, and Linux on Python 3.11 and 3.14. A workflow definition is not a passed run; publish compatibility evidence only after the corresponding jobs complete successfully.
 
 ## License
 

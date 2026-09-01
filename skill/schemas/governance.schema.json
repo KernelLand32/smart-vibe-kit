@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smart-vibe-kit.local/schemas/governance-2.1.json",
+  "title": "SVK 2.1 role-aware governed-file registry",
+  "type": "object",
+  "required": ["schema_version", "kit_version", "created_at", "files"],
+  "properties": {
+    "schema_version": {"const": "2.1"}, "kit_version": {"const": "2.1.0"}, "created_at": {"type": "string", "format": "date-time"},
+    "files": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "object", "required": ["role"], "properties": {"role": {"enum": ["immutable_provenance", "generated_projection", "mutable_state", "append_only_index", "user_governed", "optional_governed"]}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "renderer": {"type": "string", "minLength": 1}, "baseline_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}, "additionalProperties": false}}
+  },
+  "additionalProperties": false
+}

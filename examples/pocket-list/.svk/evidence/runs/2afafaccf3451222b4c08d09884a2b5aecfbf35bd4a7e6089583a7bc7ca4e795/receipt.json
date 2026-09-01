@@ -1,0 +1,60 @@
+{
+  "argv": [
+    "{python}",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-v"
+  ],
+  "artifacts": [
+    {
+      "kind": "file",
+      "path": "pocket_list.py",
+      "sha256": "17e5cee0c9f8da4ebe6fab8ec22f5f7fe05dccff1c82ae1947f4166cda28e991"
+    },
+    {
+      "kind": "file",
+      "path": "tests/test_pocket_list.py",
+      "sha256": "39988f5a48d697048ce73ebff03f7ba35faee5d7a6c1bd7185656aa8e18fa3ee"
+    }
+  ],
+  "cwd": ".",
+  "exit_code": 0,
+  "expected_exit_codes": [
+    0
+  ],
+  "finished_at": "2026-08-30T21:39:12Z",
+  "input_changed_during_run": false,
+  "inputs_after": {
+    "entries": 2,
+    "sha256": "52b752c6bfca42ab28b2d7b22ba9a8e6dd4b8b849f354b9fc000d994e01a3525"
+  },
+  "inputs_before": {
+    "entries": 2,
+    "sha256": "52b752c6bfca42ab28b2d7b22ba9a8e6dd4b8b849f354b9fc000d994e01a3525"
+  },
+  "kit_version": "2.1.0",
+  "missing_artifacts": [],
+  "owner": "example-builder",
+  "resolved_executable": "python:3.12.13:cpython",
+  "result": "pass",
+  "run_id": "2afafaccf3451222b4c08d09884a2b5aecfbf35bd4a7e6089583a7bc7ca4e795",
+  "schema_version": "2.1",
+  "started_at": "2026-08-30T21:39:12Z",
+  "stderr": {
+    "bytes": 603,
+    "sha256": "241db0b88d02ee54c147445418d8e650c6c6902f0704a50466a556c273c64aac",
+    "truncated": false
+  },
+  "stdout": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "task_id": "3.1.2",
+  "timed_out": false,
+  "verifier_id": "pocket-tests"
+}

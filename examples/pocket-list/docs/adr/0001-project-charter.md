@@ -20,4 +20,4 @@ Use the **lean** SVK profile with these modules: core, product.
 
 ## Acceptance
 
-Accept with `svk-next finish --task 1.1.2 --owner <owner> --evidence <file>` after reviewing this document.
+Begin with an explicit cooperative human attestation, then finish task 1.1.2 after reviewing this document. The attestation records what the caller says happened; it is not authenticated identity.

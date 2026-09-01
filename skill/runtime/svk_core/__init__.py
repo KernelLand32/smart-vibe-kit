@@ -1,3 +1,3 @@
-"""Smart Vibe Kit 2.0 shared runtime."""
+"""Smart Vibe Kit 2.1 shared runtime."""
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"

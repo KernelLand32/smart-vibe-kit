@@ -1,16 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://smart-vibe-kit.local/schemas/project-profile-2.0.json",
-  "title": "Smart Vibe Kit adaptive project profile",
+  "$id": "https://smart-vibe-kit.local/schemas/project-profile-2.1.json",
+  "title": "Smart Vibe Kit 2.1 adaptive project profile",
   "type": "object",
-  "required": [
-    "schema_version", "svk_version", "title", "slug", "idea", "goals",
-    "non_goals", "constraints", "platforms", "integrations", "research_tier",
-    "risk", "team_size", "signals", "profile", "modules", "expected_document_count"
-  ],
+  "required": ["schema_version", "svk_version", "title", "slug", "idea", "goals", "non_goals", "constraints", "platforms", "integrations", "research_tier", "risk", "team_size", "signals", "profile", "modules", "expected_document_count"],
   "properties": {
-    "schema_version": {"const": 1},
-    "svk_version": {"const": "2.0.0"},
+    "schema_version": {"const": "2.1"},
+    "svk_version": {"const": "2.1.0"},
     "title": {"type": "string", "minLength": 1},
     "slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
     "idea": {"type": "string", "minLength": 1},
@@ -26,25 +22,16 @@
       "type": "object",
       "required": ["user_facing", "ui", "deployable", "sensitive_data", "regulated"],
       "properties": {
-        "user_facing": {"type": "boolean"},
-        "ui": {"type": "boolean"},
-        "deployable": {"type": "boolean"},
-        "sensitive_data": {"type": "boolean"},
+        "user_facing": {"type": "boolean"}, "ui": {"type": "boolean"},
+        "deployable": {"type": "boolean"}, "sensitive_data": {"type": "boolean"},
         "regulated": {"type": "boolean"}
       },
       "additionalProperties": false
     },
     "profile": {"enum": ["lean", "standard", "extended", "regulated"]},
-    "modules": {
-      "type": "array",
-      "contains": {"const": "core"},
-      "uniqueItems": true,
-      "items": {"enum": ["core", "research", "product", "design", "engineering", "operations", "security", "regulated", "collaboration"]}
-    },
-    "expected_document_count": {"type": "integer", "minimum": 10, "maximum": 27}
+    "modules": {"type": "array", "contains": {"const": "core"}, "uniqueItems": true, "items": {"enum": ["core", "research", "product", "design", "engineering", "operations", "security", "regulated", "collaboration"]}},
+    "expected_document_count": {"type": "integer", "minimum": 14}
   },
-  "$defs": {
-    "stringArray": {"type": "array", "items": {"type": "string", "minLength": 1}}
-  },
+  "$defs": {"stringArray": {"type": "array", "items": {"type": "string", "minLength": 1}}},
   "additionalProperties": false
 }

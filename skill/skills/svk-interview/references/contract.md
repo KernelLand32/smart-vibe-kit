@@ -1,7 +1,7 @@
 # Interview runtime contract
 
-Call `scripts/entry.py` with the options documented in SKILL.md. The answers JSON is an object with required `title` and `idea` strings. Useful optional fields are `goals`, `non_goals`, `constraints`, `platforms`, `integrations`, `team_size`, `risk`, `research_tier`, `user_facing`, `ui`, `deployable`, `sensitive_data`, `regulated`, `include_modules`, and `exclude_modules`.
+Interview has two phases. `start`, `show`, `checkpoint`, and `abandon` use a durable sibling file named `.<project>.svk-interview.json`, so an unfinished interview does not contaminate the greenfield target. `scaffold` commits only after the complete staged project passes SVK Check.
 
-The runtime rejects unknown module names and prevents exclusions from removing risk-required modules. It stages the complete scaffold beside the target, validates it, commits only paths that do not already exist, rolls back files created by a failed commit, and validates the committed result.
+The final answers object contains ordinary project facts plus `plan`, `verifiers`, `plan_approved`, `plan_reviewer`, and `plan_review_reason`. The plan maps every accepted goal to deliverables and bounded `3.x.x` tasks. Verifiers use argument arrays, never shell strings.
 
-Use `python scripts/entry.py --questions` to retrieve the baseline interview topics. The model should collapse questions already answered by the idea or repository evidence.
+Every goal needs a deliverable and every deliverable needs executable tasks. Oversized tasks require a written `size_waiver`; approval cannot bypass contract validation. The runtime refuses collisions and existing projects, validates the stage, copies only absent paths, validates the final target, and removes the sibling checkpoint only after success.

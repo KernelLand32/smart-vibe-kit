@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smart-vibe-kit.local/schemas/evidence-index-2.1.json",
+  "title": "SVK 2.1 evidence index",
+  "type": "object",
+  "required": ["schema_version", "kit_version", "project", "records"],
+  "properties": {
+    "schema_version": {"const": "2.1"}, "kit_version": {"const": "2.1.0"}, "project": {"type": "string", "minLength": 1},
+    "records": {"type": "array", "items": {"oneOf": [
+      {"type": "object", "required": ["id", "kind", "task_id", "result", "summary", "actor", "recorded_at", "artifacts"], "properties": {"id": {"type": "string", "minLength": 1}, "kind": {"const": "attestation"}, "task_id": {"type": "string"}, "result": {"const": "recorded"}, "summary": {"type": "string", "minLength": 1}, "actor": {"type": "string", "minLength": 1}, "recorded_at": {"type": "string", "format": "date-time"}, "artifacts": {"type": "array", "items": {"type": "string"}}}, "additionalProperties": false},
+      {"type": "object", "required": ["id", "kind", "task_id", "verifier_id", "result", "recorded_at", "path", "receipt_sha256"], "properties": {"id": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "kind": {"const": "verification"}, "task_id": {"type": "string"}, "verifier_id": {"type": "string"}, "result": {"enum": ["pass", "fail"]}, "recorded_at": {"type": "string", "format": "date-time"}, "path": {"type": "string", "minLength": 1}, "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}, "additionalProperties": false}
+    ]}}
+  },
+  "additionalProperties": false
+}

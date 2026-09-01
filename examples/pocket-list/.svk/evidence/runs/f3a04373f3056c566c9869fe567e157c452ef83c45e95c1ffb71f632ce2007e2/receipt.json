@@ -1,0 +1,51 @@
+{
+  "argv": [
+    "svk",
+    "check",
+    "--scope",
+    "governed"
+  ],
+  "artifacts": [
+    {
+      "kind": "file",
+      "path": "docs/product/requirements.md",
+      "sha256": "601637ab2a90986cec68fc8bc3415be1bf5659cc9b267c5d815874241b482f98"
+    }
+  ],
+  "cwd": ".",
+  "exit_code": 0,
+  "expected_exit_codes": [
+    0
+  ],
+  "finished_at": "2026-08-30T21:39:10Z",
+  "input_changed_during_run": false,
+  "inputs_after": {
+    "entries": 1,
+    "sha256": "323b9824c159c54a1c569873e21c78170d89a942743529255ce5a96799dabc33"
+  },
+  "inputs_before": {
+    "entries": 1,
+    "sha256": "323b9824c159c54a1c569873e21c78170d89a942743529255ce5a96799dabc33"
+  },
+  "kit_version": "2.1.0",
+  "missing_artifacts": [],
+  "owner": "example-builder",
+  "resolved_executable": "svk:builtin:governed",
+  "result": "pass",
+  "run_id": "f3a04373f3056c566c9869fe567e157c452ef83c45e95c1ffb71f632ce2007e2",
+  "schema_version": "2.1",
+  "started_at": "2026-08-30T21:39:10Z",
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stdout": {
+    "bytes": 227,
+    "sha256": "4273e42a4ce3a9710126a1962f7f87f29f6f10f380152806897a0b4369779f67",
+    "truncated": false
+  },
+  "task_id": "2.1.1",
+  "timed_out": false,
+  "verifier_id": "svk-governed"
+}

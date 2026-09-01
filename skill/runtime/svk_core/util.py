@@ -73,6 +73,15 @@ def file_manifest(root, relative_paths):
     }
 
 
+def parse_utc(value):
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("Expected an ISO-8601 timestamp.")
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        raise ValueError("Timestamp must include a timezone.")
+    return parsed.astimezone(timezone.utc)
+
+
 def safe_project_root(value):
     root = Path(value).expanduser().resolve()
     anchor = Path(root.anchor).resolve()
@@ -92,6 +101,93 @@ def ensure_within(path, parent):
     except ValueError:
         raise ValueError("Path escapes the allowed root: %s" % resolved)
     return resolved
+
+
+def _is_reparse_or_symlink(path):
+    path = Path(path)
+    if path.is_symlink():
+        return True
+    try:
+        attributes = getattr(path.lstat(), "st_file_attributes", 0)
+    except OSError:
+        return False
+    return bool(attributes & getattr(__import__("stat"), "FILE_ATTRIBUTE_REPARSE_POINT", 0))
+
+
+def safe_relative_path(root, relative, must_exist=False, expect_file=False, reject_links=True):
+    """Resolve a project-relative path without allowing link or reparse escapes."""
+    root = Path(root).resolve()
+    if not isinstance(relative, str) or not relative.strip():
+        raise ValueError("A non-empty relative path is required.")
+    lexical = Path(relative)
+    if lexical.is_absolute() or ".." in lexical.parts:
+        raise ValueError("Path must stay inside the project: %s" % relative)
+    candidate = root / lexical
+    current = root
+    if reject_links:
+        for part in lexical.parts:
+            current = current / part
+            if current.exists() and _is_reparse_or_symlink(current):
+                raise ValueError("Symbolic links and reparse points are not accepted: %s" % relative)
+    resolved = candidate.resolve(strict=False)
+    ensure_within(resolved, root)
+    if must_exist and not resolved.exists():
+        raise FileNotFoundError("Required project path is missing: %s" % relative)
+    if expect_file and resolved.exists() and not resolved.is_file():
+        raise ValueError("Expected a regular file: %s" % relative)
+    return resolved
+
+
+def validate_no_links(root):
+    root = Path(root).resolve()
+    for path in sorted(root.rglob("*")):
+        if _is_reparse_or_symlink(path):
+            raise ValueError("Symbolic links and reparse points are not accepted: %s" % path)
+
+
+def snapshot_fingerprint(root, relative_paths, excludes=()):
+    """Hash path names, types, and content for a deterministic task input snapshot."""
+    root = Path(root).resolve()
+    excluded = tuple(str(item).replace("\\", "/").rstrip("/") for item in excludes)
+    entries = []
+    seen = set()
+    for relative in sorted(set(relative_paths)):
+        target = safe_relative_path(root, relative, must_exist=False)
+        if not target.exists():
+            entries.append((str(relative).replace("\\", "/"), "missing", ""))
+            continue
+        candidates = [target] if target.is_file() else [item for item in sorted(target.rglob("*")) if item.is_file()]
+        for candidate in candidates:
+            item_relative = candidate.relative_to(root).as_posix()
+            if any(item_relative == prefix or item_relative.startswith(prefix + "/") for prefix in excluded):
+                continue
+            safe_relative_path(root, item_relative, must_exist=True, expect_file=True)
+            if item_relative in seen:
+                continue
+            seen.add(item_relative)
+            entries.append((item_relative, "file", sha256_file(candidate)))
+    digest = hashlib.sha256()
+    for path, kind, value in sorted(entries):
+        digest.update((path + "\0" + kind + "\0" + value + "\n").encode("utf-8"))
+    return {"sha256": digest.hexdigest(), "entries": len(entries)}
+
+
+def write_json_exclusive(path, value):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor = os.open(str(path), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as handle:
+            json.dump(value, handle, indent=2, sort_keys=True, ensure_ascii=False)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+    except Exception:
+        try:
+            path.unlink()
+        except OSError:
+            pass
+        raise
 
 
 def slugify(value):

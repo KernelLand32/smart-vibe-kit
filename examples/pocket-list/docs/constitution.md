@@ -21,7 +21,7 @@ Build a small offline command-line task list for one person. The program stores 
 
 ## Constraints
 
-- Use Python 3.8 or newer and only the standard library
+- Use Python 3.11 or newer and only the standard library
 - Store data in a human-readable local JSON file
 - Run without a network connection
 - Keep the command syntax and stored-data behavior testable

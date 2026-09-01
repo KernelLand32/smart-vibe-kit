@@ -1,0 +1,64 @@
+{
+  "created_at": "2026-08-30T21:39:00Z",
+  "files": {
+    ".svk/evidence/index.json": {
+      "role": "append_only_index"
+    },
+    ".svk/governance.json": {
+      "role": "mutable_state"
+    },
+    ".svk/install.json": {
+      "role": "immutable_provenance",
+      "sha256": "77b43f540c57692fdd9591fdb1220304c7d3175c091cc6d3196c5cf9dd621e14"
+    },
+    ".svk/interview/session.json": {
+      "role": "mutable_state"
+    },
+    ".svk/plan.json": {
+      "role": "mutable_state"
+    },
+    ".svk/project.json": {
+      "role": "mutable_state"
+    },
+    ".svk/state.json": {
+      "role": "mutable_state"
+    },
+    ".svk/verifiers.json": {
+      "role": "mutable_state"
+    },
+    "AGENTS.md": {
+      "renderer": "agents-v2.1",
+      "role": "generated_projection"
+    },
+    "docs/adr/0001-project-charter.md": {
+      "renderer": "charter-v2.1",
+      "role": "generated_projection"
+    },
+    "docs/constitution.md": {
+      "baseline_sha256": "b912c4d3870918ac505c23814072ab9800d156fcd860b3a5f7883a3c3658a970",
+      "role": "user_governed"
+    },
+    "docs/product/acceptance.md": {
+      "baseline_sha256": "2942f8d57754fd7724caf85a85ce8f8cd355f036daa7009055bde1bd22f35f01",
+      "role": "user_governed"
+    },
+    "docs/product/requirements.md": {
+      "baseline_sha256": "e511f06e9591c94f2d12b44aa22ee6ab7b49f2a2f5991cc80992e06cca7bad78",
+      "role": "user_governed"
+    },
+    "docs/registry.md": {
+      "baseline_sha256": "c3c4aefedbc64238379a54dc457b85b149c2b86aedf1b45bb77352e07e7708fe",
+      "role": "user_governed"
+    },
+    "docs/tasks.md": {
+      "renderer": "tasks-v2.1",
+      "role": "generated_projection"
+    },
+    "docs/verification.md": {
+      "baseline_sha256": "48c8ec01e92e5f93699bf302db8bcac1d7b6e922223aea245c55a658cd2cf98d",
+      "role": "user_governed"
+    }
+  },
+  "kit_version": "2.1.0",
+  "schema_version": "2.1"
+}

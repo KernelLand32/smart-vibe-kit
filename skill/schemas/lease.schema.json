@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smart-vibe-kit.local/schemas/lease-2.1.json",
+  "title": "SVK 2.1 revision-bound task lease",
+  "type": "object",
+  "required": ["schema_version", "kit_version", "owner", "task_id", "state_revision", "created_at", "expires_at"],
+  "properties": {
+    "schema_version": {"const": "2.1"}, "kit_version": {"const": "2.1.0"}, "owner": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "pattern": "^[1-9][0-9]*\\.[1-9][0-9]*\\.[1-9][0-9]*$"}, "state_revision": {"type": "integer", "minimum": 1},
+    "created_at": {"type": "string", "format": "date-time"}, "expires_at": {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": false
+}

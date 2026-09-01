@@ -37,11 +37,14 @@ def build(output):
     os.close(descriptor)
     temporary = Path(temporary_name)
     try:
-        with zipfile.ZipFile(str(temporary), "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+        # Stored entries are slightly larger, but unlike zlib-compressed bytes
+        # they are reproducible across Python/zlib builds and operating systems.
+        with zipfile.ZipFile(str(temporary), "w", compression=zipfile.ZIP_STORED) as archive:
             for path in source_files():
                 relative = path.relative_to(ROOT).as_posix()
                 info = zipfile.ZipInfo("%s/%s" % (ARCHIVE_ROOT, relative), FIXED_TIME)
-                info.compress_type = zipfile.ZIP_DEFLATED
+                info.create_system = 3
+                info.compress_type = zipfile.ZIP_STORED
                 info.external_attr = (0o755 if path.suffix in (".py", ".ps1", ".sh") else 0o644) << 16
                 archive.writestr(info, path.read_bytes())
         os.replace(str(temporary), str(output))

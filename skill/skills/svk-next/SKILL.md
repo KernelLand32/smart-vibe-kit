@@ -1,20 +1,20 @@
 ---
 name: svk-next
-description: Show, begin, block, or finish exactly one Smart Vibe Kit task using an ownership lock and structured evidence. Use only when the user explicitly invokes SVK Next or unmistakably asks to run this named action in an existing SVK project.
+description: Lease, execute, verify, block, or finish exactly one Smart Vibe Kit task with revision-bound ownership and SVK-created receipts. Use only when the user explicitly invokes SVK Next or unmistakably asks to run this named action in an existing SVK project.
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
 ---
 
 # SVK Next
 
-If this skill was selected implicitly, do not begin work or acquire a lock. Explain that SVK Next is explicit-only and show the host-appropriate invocation.
+This action is explicit-only. If selected implicitly, show the invocation and do not begin work or acquire a lease.
 
-When explicitly invoked:
+1. Run `python scripts/entry.py --root <project> show`. Read only the task packet and named scope unless more context is essential.
+2. Stop on contract errors, incomplete transactions, orphan receipts, or another lease. Never steal ownership.
+3. Begin with `begin --owner <stable-owner>`. For a human gate, also provide `--allow-human-gate --human-actor <label> --human-reason <reason>` after the human acts.
+4. Perform only the leased task. The lease does not authorize publishing, production changes, spending, secret access, destructive work, or external communication.
+5. Run every required verifier through `verify --owner <owner> --task <id> --verifier <id>`. Do not substitute prose or a hand-written evidence file for a receipt.
+6. Finish with `finish --owner <owner> --task <id> --receipts <id,id>`. If unresolved, use `block --reason <specific blocker>`.
+7. Report the completed task, receipt IDs, check result, and newly promoted task, then stop. Never execute the promoted task in the same invocation.
 
-1. Run `python scripts/entry.py --root <project> show` and read only the returned task packet plus its named artifacts.
-2. Stop on state errors, incomplete transactions, or an existing lock. Never steal or silently clear ownership.
-3. Begin with `python scripts/entry.py --root <project> begin --owner <stable-owner>`. A human-gate task also requires `--allow-human-gate` after the human has agreed to perform that gate.
-4. Perform only that task. Do not broaden authorization to publishing, production, spending, secrets, destructive operations, or external communications.
-5. Put the task's observed evidence in a JSON file following [the runtime contract](references/contract.md).
-6. Finish with `python scripts/entry.py --root <project> finish --owner <owner> --task <id> --evidence <json>`. If incomplete, use `block --reason <specific blocker>`.
-7. Report what changed, evidence, the newly promoted task, and then stop. Never execute the promoted task in the same invocation.
+See [the contract](references/contract.md) for freshness, leases, receipts, and recovery rules.

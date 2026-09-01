@@ -1,0 +1,36 @@
+{
+  "kit_version": "2.1.0",
+  "schema_version": "2.1",
+  "verifiers": {
+    "pocket-tests": {
+      "argv": [
+        "{python}",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "artifacts": [
+        "pocket_list.py",
+        "tests/test_pocket_list.py"
+      ],
+      "cwd": ".",
+      "environment": {
+        "inherit": "safe-defaults",
+        "set": {}
+      },
+      "expected_exit_codes": [
+        0
+      ],
+      "kind": "command",
+      "timeout_seconds": 120
+    },
+    "svk-governed": {
+      "check": "governed",
+      "kind": "builtin"
+    }
+  }
+}

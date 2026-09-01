@@ -14,7 +14,7 @@
     "No due dates, reminders, tags, or recurring tasks in the first release"
   ],
   "constraints": [
-    "Use Python 3.8 or newer and only the standard library",
+    "Use Python 3.11 or newer and only the standard library",
     "Store data in a human-readable local JSON file",
     "Run without a network connection",
     "Keep the command syntax and stored-data behavior testable"
@@ -28,5 +28,62 @@
   "ui": false,
   "deployable": false,
   "sensitive_data": false,
-  "regulated": false
+  "regulated": false,
+  "verifiers": {
+    "pocket-tests": {
+      "kind": "command",
+      "argv": ["{python}", "-B", "-m", "unittest", "discover", "-s", "tests", "-v"],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "expected_exit_codes": [0],
+      "artifacts": ["pocket_list.py", "tests/test_pocket_list.py"],
+      "environment": {"inherit": "safe-defaults", "set": {}}
+    }
+  },
+  "plan_approved": true,
+  "plan_reviewer": "Pocket List project owner",
+  "plan_review_reason": "The deliverables are small, ordered, independently testable, and cover the accepted first release without adding excluded features.",
+  "plan": {
+    "goals": [
+      {"id": "goal-1", "title": "Add a task and save it locally"},
+      {"id": "goal-2", "title": "List unfinished tasks after restarting the program"},
+      {"id": "goal-3", "title": "Mark a task complete without losing other tasks"}
+    ],
+    "deliverables": [
+      {"id": "add-command", "goal_id": "goal-1", "title": "Persistent add command", "acceptance": ["Adding non-blank text appends a uniquely identified unfinished task to valid JSON."]},
+      {"id": "list-command", "goal_id": "goal-2", "title": "Restart-safe list command", "acceptance": ["A new process lists unfinished tasks previously saved to disk."]},
+      {"id": "complete-command", "goal_id": "goal-3", "title": "Lossless completion command", "acceptance": ["Completing one task preserves every other stored task and reports unknown IDs safely."]}
+    ],
+    "tasks": [
+      {
+        "id": "3.1.1", "kind": "implementation", "title": "Implement atomic task creation and JSON persistence",
+        "goal_id": "goal-1", "deliverable_id": "add-command", "depends_on": [], "dependency_rationale": {}, "human_gate": false,
+        "acceptance": ["Blank task text is rejected without changing data.", "Valid tasks receive increasing integer IDs.", "Writes replace the JSON file atomically."],
+        "expected_artifacts": ["pocket_list.py"], "scope_hints": ["pocket_list.py"], "required_verifiers": ["pocket-tests"], "risk": "low",
+        "size_signals": {"subsystems": 1, "acceptance_items": 3, "verifier_count": 1, "scope_hints": 1}
+      },
+      {
+        "id": "3.1.2", "kind": "verification", "title": "Lock in add-command persistence regressions",
+        "goal_id": "goal-1", "deliverable_id": "add-command", "depends_on": ["3.1.1"], "dependency_rationale": {"3.1.1": "The persistence behavior must exist before its regression suite is finalized."}, "human_gate": false,
+        "acceptance": ["Tests cover reload, blank input, malformed data, and CLI output."],
+        "expected_artifacts": ["tests/test_pocket_list.py"], "scope_hints": ["pocket_list.py", "tests/test_pocket_list.py"], "required_verifiers": ["pocket-tests"], "risk": "low",
+        "size_signals": {"subsystems": 1, "acceptance_items": 1, "verifier_count": 1, "scope_hints": 2}
+      },
+      {
+        "id": "3.2.1", "kind": "implementation", "title": "Implement restart-safe unfinished-task listing",
+        "goal_id": "goal-2", "deliverable_id": "list-command", "depends_on": ["3.1.2"], "dependency_rationale": {"3.1.2": "Listing builds on the validated storage contract."}, "human_gate": false,
+        "acceptance": ["Only unfinished tasks are listed after a fresh process reads the saved file."],
+        "expected_artifacts": ["pocket_list.py", "tests/test_pocket_list.py"], "scope_hints": ["pocket_list.py", "tests/test_pocket_list.py"], "required_verifiers": ["pocket-tests"], "risk": "low",
+        "size_signals": {"subsystems": 1, "acceptance_items": 1, "verifier_count": 1, "scope_hints": 2}
+      },
+      {
+        "id": "3.3.1", "kind": "implementation", "title": "Implement lossless task completion",
+        "goal_id": "goal-3", "deliverable_id": "complete-command", "depends_on": ["3.2.1"], "dependency_rationale": {"3.2.1": "Completion uses the same validated read/list storage flow."}, "human_gate": false,
+        "acceptance": ["Completing one known ID changes only that task.", "Unknown IDs fail without changing the file."],
+        "expected_artifacts": ["pocket_list.py", "tests/test_pocket_list.py"], "scope_hints": ["pocket_list.py", "tests/test_pocket_list.py"], "required_verifiers": ["pocket-tests"], "risk": "low",
+        "size_signals": {"subsystems": 1, "acceptance_items": 2, "verifier_count": 1, "scope_hints": 2}
+      }
+    ],
+    "release_verifiers": ["pocket-tests", "svk-governed"]
+  }
 }

@@ -6,14 +6,14 @@ Project: **Pocket List**
 
 1. Structure: all profile-required artifacts exist and contain substantive text.
 2. State: task IDs, dependencies, status, and `next_action` agree.
-3. Evidence: every completed task has a corresponding evidence record.
+3. Evidence: every required verifier has a fresh SVK-created receipt bound to the task inputs.
 4. References: relative Markdown links resolve inside the project.
 5. Safety: no incomplete transaction or live lock remains.
 
 ## Evidence format
 
-Evidence is JSON with `summary`, `commands`, `artifacts`, and `result` fields. Store one record per completed task in `.svk/evidence.jsonl`.
+SVK stores immutable verifier receipts under `.svk/evidence/runs/` and indexes them in `.svk/evidence/index.json`. Human notes and cooperative attestations may add context but do not replace a required verifier receipt.
 
 ## Release gate
 
-The project is release-ready only when the SVK Check result is `PASS` and task 3.1.1 has evidence.
+The project is release-ready only when the SVK Check result is `PASS` and the release task has fresh passing receipts for every configured release verifier.

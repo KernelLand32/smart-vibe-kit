@@ -1,6 +1,6 @@
 # Harness compatibility
 
-Last reviewed: 2026-08-23. [`compatibility.json`](compatibility.json) contains the machine-readable paths, invocation forms, policy adapters, source links, and validation flags.
+Last reviewed: 2026-08-31. [`compatibility.json`](compatibility.json) contains the machine-readable paths, invocation forms, policy adapters, source links, and validation flags.
 
 Compatibility is reported at the harness level because the harness controls skill discovery, commands, tools, filesystem access, and approvals. Rows without runtime certification should be treated as beta integrations.
 
@@ -9,13 +9,14 @@ Compatibility is reported at the harness level because the harness controls skil
 | OpenAI Codex | `$svk-interview` and the other `$svk-*` names, or the host skill selector | Package metadata validated; runtime integration not yet certified |
 | Cursor | `/svk-*` | Documented native paths and explicit-only policy adapter |
 | Claude Code | `/svk-*` | Documented native paths and explicit-only policy adapter |
-| xAI Grok Build | `/svk-*` from shared `.agents` skills | Documented shared path and explicit-only policy adapter |
+| xAI Grok Build | `/svk-*` from native `.grok` skills | Documented native and compatibility paths plus explicit-only policy adapter |
 | GitHub Copilot CLI | Name the `svk-*` skill explicitly; `/skills` manages discovery | Documented shared path; activation remains host-managed |
 | Qwen Code | `/svk-*` or `/skills` | Documented native paths and explicit-only policy adapter |
 | Kimi Code CLI | `/skill:svk-*` | Documented native paths and camelCase explicit-only adapter |
 | Gemini CLI | Named request plus activation consent; `/skills` manages skills | Supported through host-managed activation; explicit-only package policy is unavailable |
 | Google Antigravity | Named request or host skill UI | Discovery paths supported; activation and policy behavior remain host-managed |
 | OpenCode | Skill tool or named request | Discovery supported; host permissions control access |
+| Pi | `/skill:svk-*` or named request | Native and shared paths documented; explicit-only policy adapter |
 | Goose | `/skills <name>` or named request | Shared `.agents` packaging |
 | Roo Code | Named request | Shared `.agents` packaging |
 | Junie | `/svk-*` or `$svk-*` | Shared `.agents` packaging |
@@ -31,4 +32,4 @@ DeepSeek, GLM, MiniMax, Qwen, Kimi, and other model families can run inside diff
 
 ## Operating systems
 
-SVK requires Python 3.8+ and uses only the standard library. Windows is verified for 2.0.0. macOS and Linux support is preview until runtime certification is available. The supplied CI matrix covers Windows, macOS, and Linux on Python 3.8 and 3.12.
+SVK requires Python 3.11+ and uses only the standard library. This development release has local Windows evidence on Python 3.11, 3.12, and 3.14, plus WSL Linux evidence on Python 3.12. The supplied CI definitions cover Windows, macOS, and Linux on Python 3.11 and 3.14, but a definition is not a passing result; macOS and `runtime_tested: false` rows remain unverified until recorded evidence exists.

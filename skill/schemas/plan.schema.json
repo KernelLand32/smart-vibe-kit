@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smart-vibe-kit.local/schemas/plan-2.1.json",
+  "title": "Approved SVK 2.1 execution plan",
+  "type": "object",
+  "required": ["schema_version", "kit_version", "project", "review_status", "reviewer", "reviewed_at", "review_reason", "goals", "deliverables", "tasks", "release_verifiers", "sizing_policy"],
+  "properties": {
+    "schema_version": {"const": "2.1"}, "kit_version": {"const": "2.1.0"}, "project": {"type": "string", "minLength": 1},
+    "review_status": {"const": "approved"}, "reviewer": {"type": "string", "minLength": 1}, "reviewed_at": {"type": "string", "format": "date-time"}, "review_reason": {"type": "string", "minLength": 1},
+    "goals": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["id", "title"], "properties": {"id": {"type": "string", "pattern": "^goal-[1-9][0-9]*$"}, "title": {"type": "string", "minLength": 1}}, "additionalProperties": false}},
+    "deliverables": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["id", "goal_id", "title", "acceptance"], "properties": {"id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"}, "goal_id": {"type": "string"}, "title": {"type": "string", "minLength": 1}, "acceptance": {"$ref": "#/$defs/strings"}}, "additionalProperties": false}},
+    "tasks": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/task"}},
+    "release_verifiers": {"$ref": "#/$defs/strings"},
+    "sizing_policy": {"type": "object", "required": ["max_subsystems", "max_acceptance_items", "max_verifiers", "max_scope_hints"], "properties": {"max_subsystems": {"type": "integer", "minimum": 1}, "max_acceptance_items": {"type": "integer", "minimum": 1}, "max_verifiers": {"type": "integer", "minimum": 1}, "max_scope_hints": {"type": "integer", "minimum": 1}}, "additionalProperties": false}
+  },
+  "$defs": {
+    "strings": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "task": {
+      "type": "object",
+      "required": ["id", "kind", "title", "goal_id", "deliverable_id", "depends_on", "dependency_rationale", "human_gate", "acceptance", "expected_artifacts", "scope_hints", "required_verifiers", "risk", "size_signals"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^3\\.[1-9][0-9]*\\.[1-9][0-9]*$"},
+        "kind": {"enum": ["research", "design", "implementation", "migration", "verification", "documentation"]},
+        "title": {"type": "string", "minLength": 1}, "goal_id": {"type": "string", "pattern": "^goal-[1-9][0-9]*$"}, "deliverable_id": {"type": "string", "minLength": 1},
+        "depends_on": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^3\\.[1-9][0-9]*\\.[1-9][0-9]*$"}},
+        "dependency_rationale": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+        "human_gate": {"type": "boolean"}, "acceptance": {"$ref": "#/$defs/strings"},
+        "expected_artifacts": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "scope_hints": {"$ref": "#/$defs/strings"}, "required_verifiers": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "risk": {"enum": ["low", "normal", "high"]},
+        "size_signals": {"type": "object", "required": ["subsystems", "acceptance_items", "verifier_count", "scope_hints"], "properties": {"subsystems": {"type": "integer", "minimum": 1}, "acceptance_items": {"type": "integer", "minimum": 1}, "verifier_count": {"type": "integer", "minimum": 0}, "scope_hints": {"type": "integer", "minimum": 1}}, "additionalProperties": false},
+        "no_artifact_reason": {"type": "string", "minLength": 1}, "size_waiver": {"type": "string", "minLength": 1}, "supersedes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

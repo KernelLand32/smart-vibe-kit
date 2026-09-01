@@ -1,6 +1,6 @@
 """Convert interview answers into a deterministic project profile."""
 
-from .constants import MODULES, MODULE_DOCUMENTS
+from .constants import CORE_DOCUMENTS, MODULES, MODULE_DOCUMENTS, VERSION
 from .util import slugify
 
 
@@ -96,8 +96,12 @@ def profile_name(modules, answers):
 
 
 def expected_document_count(modules):
-    # Six core documents plus module documents and four machine-state files.
-    return 10 + sum(len(MODULE_DOCUMENTS.get(module, ())) for module in modules)
+    # Human documents plus profile, state, plan, verifiers, governance, evidence,
+    # installation provenance, and the durable Interview checkpoint.
+    machine_files = 8
+    return len(CORE_DOCUMENTS) + machine_files + sum(
+        len(MODULE_DOCUMENTS.get(module, ())) for module in modules
+    )
 
 
 def build_profile(answers):
@@ -110,8 +114,8 @@ def build_profile(answers):
         raise ValueError("A project idea is required.")
     modules = select_modules(answers)
     return {
-        "schema_version": 1,
-        "svk_version": "2.0.0",
+        "schema_version": "2.1",
+        "svk_version": VERSION,
         "title": title,
         "slug": slugify(answers.get("slug") or title),
         "idea": idea,

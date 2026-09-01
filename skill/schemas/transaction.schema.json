@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smart-vibe-kit.local/schemas/transaction-2.1.json",
+  "title": "SVK 2.1 durable transaction journal record",
+  "type": "object",
+  "required": ["schema_version", "kit_version", "id", "operation", "status", "recorded_at", "before_revision", "after_revision"],
+  "properties": {
+    "schema_version": {"const": "2.1"}, "kit_version": {"const": "2.1.0"}, "id": {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+    "operation": {"type": "string", "minLength": 1}, "status": {"enum": ["in_progress", "committed", "rolled_back"]}, "recorded_at": {"type": "string", "format": "date-time"},
+    "before_revision": {"type": "integer", "minimum": 0}, "after_revision": {"type": "integer", "minimum": 1},
+    "task_id": {"type": "string"}, "details": {"type": "object"}
+  },
+  "additionalProperties": false
+}

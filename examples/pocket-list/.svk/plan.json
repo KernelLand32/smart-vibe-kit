@@ -1,0 +1,197 @@
+{
+  "deliverables": [
+    {
+      "acceptance": [
+        "Adding non-blank text appends a uniquely identified unfinished task to valid JSON."
+      ],
+      "goal_id": "goal-1",
+      "id": "add-command",
+      "title": "Persistent add command"
+    },
+    {
+      "acceptance": [
+        "A new process lists unfinished tasks previously saved to disk."
+      ],
+      "goal_id": "goal-2",
+      "id": "list-command",
+      "title": "Restart-safe list command"
+    },
+    {
+      "acceptance": [
+        "Completing one task preserves every other stored task and reports unknown IDs safely."
+      ],
+      "goal_id": "goal-3",
+      "id": "complete-command",
+      "title": "Lossless completion command"
+    }
+  ],
+  "goals": [
+    {
+      "id": "goal-1",
+      "title": "Add a task and save it locally"
+    },
+    {
+      "id": "goal-2",
+      "title": "List unfinished tasks after restarting the program"
+    },
+    {
+      "id": "goal-3",
+      "title": "Mark a task complete without losing other tasks"
+    }
+  ],
+  "kit_version": "2.1.0",
+  "project": "pocket-list",
+  "release_verifiers": [
+    "pocket-tests",
+    "svk-governed"
+  ],
+  "review_reason": "The deliverables are small, ordered, independently testable, and cover the accepted first release without adding excluded features.",
+  "review_status": "approved",
+  "reviewed_at": "2026-08-30T21:39:00Z",
+  "reviewer": "Pocket List project owner",
+  "schema_version": "2.1",
+  "sizing_policy": {
+    "max_acceptance_items": 5,
+    "max_scope_hints": 12,
+    "max_subsystems": 1,
+    "max_verifiers": 3
+  },
+  "tasks": [
+    {
+      "acceptance": [
+        "Blank task text is rejected without changing data.",
+        "Valid tasks receive increasing integer IDs.",
+        "Writes replace the JSON file atomically."
+      ],
+      "deliverable_id": "add-command",
+      "dependency_rationale": {},
+      "depends_on": [],
+      "expected_artifacts": [
+        "pocket_list.py"
+      ],
+      "goal_id": "goal-1",
+      "human_gate": false,
+      "id": "3.1.1",
+      "kind": "implementation",
+      "required_verifiers": [
+        "pocket-tests"
+      ],
+      "risk": "low",
+      "scope_hints": [
+        "pocket_list.py"
+      ],
+      "size_signals": {
+        "acceptance_items": 3,
+        "scope_hints": 1,
+        "subsystems": 1,
+        "verifier_count": 1
+      },
+      "title": "Implement atomic task creation and JSON persistence"
+    },
+    {
+      "acceptance": [
+        "Tests cover reload, blank input, malformed data, and CLI output."
+      ],
+      "deliverable_id": "add-command",
+      "dependency_rationale": {
+        "3.1.1": "The persistence behavior must exist before its regression suite is finalized."
+      },
+      "depends_on": [
+        "3.1.1"
+      ],
+      "expected_artifacts": [
+        "tests/test_pocket_list.py"
+      ],
+      "goal_id": "goal-1",
+      "human_gate": false,
+      "id": "3.1.2",
+      "kind": "verification",
+      "required_verifiers": [
+        "pocket-tests"
+      ],
+      "risk": "low",
+      "scope_hints": [
+        "pocket_list.py",
+        "tests/test_pocket_list.py"
+      ],
+      "size_signals": {
+        "acceptance_items": 1,
+        "scope_hints": 2,
+        "subsystems": 1,
+        "verifier_count": 1
+      },
+      "title": "Lock in add-command persistence regressions"
+    },
+    {
+      "acceptance": [
+        "Only unfinished tasks are listed after a fresh process reads the saved file."
+      ],
+      "deliverable_id": "list-command",
+      "dependency_rationale": {
+        "3.1.2": "Listing builds on the validated storage contract."
+      },
+      "depends_on": [
+        "3.1.2"
+      ],
+      "expected_artifacts": [
+        "pocket_list.py",
+        "tests/test_pocket_list.py"
+      ],
+      "goal_id": "goal-2",
+      "human_gate": false,
+      "id": "3.2.1",
+      "kind": "implementation",
+      "required_verifiers": [
+        "pocket-tests"
+      ],
+      "risk": "low",
+      "scope_hints": [
+        "pocket_list.py",
+        "tests/test_pocket_list.py"
+      ],
+      "size_signals": {
+        "acceptance_items": 1,
+        "scope_hints": 2,
+        "subsystems": 1,
+        "verifier_count": 1
+      },
+      "title": "Implement restart-safe unfinished-task listing"
+    },
+    {
+      "acceptance": [
+        "Completing one known ID changes only that task.",
+        "Unknown IDs fail without changing the file."
+      ],
+      "deliverable_id": "complete-command",
+      "dependency_rationale": {
+        "3.2.1": "Completion uses the same validated read/list storage flow."
+      },
+      "depends_on": [
+        "3.2.1"
+      ],
+      "expected_artifacts": [
+        "pocket_list.py",
+        "tests/test_pocket_list.py"
+      ],
+      "goal_id": "goal-3",
+      "human_gate": false,
+      "id": "3.3.1",
+      "kind": "implementation",
+      "required_verifiers": [
+        "pocket-tests"
+      ],
+      "risk": "low",
+      "scope_hints": [
+        "pocket_list.py",
+        "tests/test_pocket_list.py"
+      ],
+      "size_signals": {
+        "acceptance_items": 2,
+        "scope_hints": 2,
+        "subsystems": 1,
+        "verifier_count": 1
+      },
+      "title": "Implement lossless task completion"
+    }
+  ]
+}

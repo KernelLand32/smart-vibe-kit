@@ -1,13 +1,21 @@
 """Stable constants shared by every SVK action."""
 
-VERSION = "2.0.0"
+VERSION = "2.1.0"
+SCHEMA_VERSION = "2.1"
 STATE_DIR = ".svk"
 PROFILE_FILE = ".svk/project.json"
 STATE_FILE = ".svk/state.json"
-EVIDENCE_FILE = ".svk/evidence.jsonl"
+PLAN_FILE = ".svk/plan.json"
+VERIFIERS_FILE = ".svk/verifiers.json"
+GOVERNANCE_FILE = ".svk/governance.json"
+EVIDENCE_INDEX_FILE = ".svk/evidence/index.json"
+EVIDENCE_RUNS_DIR = ".svk/evidence/runs"
+INTERVIEW_FILE = ".svk/interview/session.json"
 INSTALL_FILE = ".svk/install.json"
 LOCK_FILE = ".svk/locks/next.json"
-MANIFEST_FILE = ".svk/baselines/manifest.json"
+TRANSITION_LOCK_FILE = ".svk/locks/transition.json"
+LEGACY_EVIDENCE_FILE = ".svk/evidence.jsonl"
+LEGACY_MANIFEST_FILE = ".svk/baselines/manifest.json"
 
 MODULES = (
     "core",
@@ -21,7 +29,7 @@ MODULES = (
     "collaboration",
 )
 
-STATUS_VALUES = ("pending", "in_progress", "blocked", "done")
+STATUS_VALUES = ("pending", "in_progress", "blocked", "done", "superseded")
 TASK_ID_PATTERN = r"^[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]*$"
 
 CORE_DOCUMENTS = (

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smart-vibe-kit.local/schemas/verifiers-2.1.json",
+  "title": "SVK 2.1 verifier registry",
+  "type": "object",
+  "required": ["schema_version", "kit_version", "verifiers"],
+  "properties": {
+    "schema_version": {"const": "2.1"}, "kit_version": {"const": "2.1.0"},
+    "verifiers": {"type": "object", "minProperties": 1, "propertyNames": {"pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"}, "additionalProperties": {"oneOf": [
+      {"type": "object", "required": ["kind", "check"], "properties": {"kind": {"const": "builtin"}, "check": {"const": "governed"}}, "additionalProperties": false},
+      {"type": "object", "required": ["kind", "argv", "cwd", "timeout_seconds", "expected_exit_codes", "artifacts", "environment"], "properties": {"kind": {"const": "command"}, "argv": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "cwd": {"type": "string", "minLength": 1}, "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 3600}, "expected_exit_codes": {"type": "array", "minItems": 1, "items": {"type": "integer"}}, "artifacts": {"type": "array", "items": {"type": "string", "minLength": 1}}, "environment": {"type": "object", "required": ["inherit", "set"], "properties": {"inherit": {"enum": ["safe-defaults", "none"]}, "set": {"type": "object", "additionalProperties": {"type": "string"}}}, "additionalProperties": false}}, "additionalProperties": false}
+    ]}}
+  },
+  "additionalProperties": false
+}

@@ -1,20 +1,19 @@
 ---
 name: svk-check
-description: Run deterministic structural and semantic verification of a Smart Vibe Kit project, including task-state, evidence, links, placeholders, required modules, locks, and transactions. Use only when the user explicitly invokes SVK Check or asks to run this named project audit.
+description: Run deterministic verification of an SVK project, including strict schemas, plan/state agreement, governed files, links, receipts, freshness, leases, and transactions. Use only when the user explicitly invokes SVK Check or asks to run this named audit.
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
 ---
 
 # SVK Check
 
-If this skill was selected implicitly, do not run or repair anything. Explain that SVK Check is explicit-only and show the host-appropriate invocation.
+This action is explicit-only. Checking authorizes an audit, not repair.
 
-When explicitly invoked:
+1. Run `python scripts/entry.py --root <project>`. This checks governed Markdown only.
+2. Use `--scope all-docs` only when the user asks to audit every Markdown file in the repository.
+3. Report `PASS`, `WARN`, `BLOCKED`, or `ERROR` and every stable diagnostic code.
+4. Distinguish missing structure, semantic drift, stale/missing receipts, live coordination state, and recoverable journal issues.
+5. Do not rewrite files, remove leases, or recover transactions automatically.
+6. Package maintainers may use `python scripts/entry.py --package --root <skill-bundle>` for the distributable bundle.
 
-1. Run `python scripts/entry.py --root <project>`.
-2. Report the overall `PASS`, `WARN`, `BLOCKED`, or `ERROR` result and every stable diagnostic code.
-3. Distinguish structural absence from semantic disagreement. A non-empty file is not proof that its task, charter, evidence, or links are valid.
-4. Do not automatically repair results. Checking authorizes an audit, not edits, lock removal, or transaction recovery.
-5. For package maintainers only, `python scripts/entry.py --package --root <skill-bundle>` verifies the distributable skill bundle.
-
-See [the diagnostic contract](references/contract.md) for result meanings.
+See [the diagnostic contract](references/contract.md).

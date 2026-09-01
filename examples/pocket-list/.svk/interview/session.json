@@ -1,0 +1,17 @@
+{
+  "created_at": "2026-08-30T21:39:00Z",
+  "idea": "Build a small offline command-line task list for one person. The program stores its data locally and keeps working without an internet connection.",
+  "kit_version": "2.1.0",
+  "proposal_sha256": null,
+  "schema_version": "2.1",
+  "sections": {
+    "review": {
+      "final_answers_recorded": true
+    }
+  },
+  "session_id": "ecfd8d0caea048318c472183b2d9940a",
+  "status": "scaffolded",
+  "target": "pocket-list",
+  "unresolved_questions": [],
+  "updated_at": "2026-08-30T21:39:00Z"
+}

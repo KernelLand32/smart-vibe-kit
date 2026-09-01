@@ -1,11 +1,11 @@
 {
   "constraints": [
-    "Use Python 3.8 or newer and only the standard library",
+    "Use Python 3.11 or newer and only the standard library",
     "Store data in a human-readable local JSON file",
     "Run without a network connection",
     "Keep the command syntax and stored-data behavior testable"
   ],
-  "expected_document_count": 12,
+  "expected_document_count": 16,
   "goals": [
     "Add a task and save it locally",
     "List unfinished tasks after restarting the program",
@@ -31,7 +31,7 @@
   "profile": "lean",
   "research_tier": 0,
   "risk": "low",
-  "schema_version": 1,
+  "schema_version": "2.1",
   "signals": {
     "deployable": false,
     "regulated": false,
@@ -40,7 +40,7 @@
     "user_facing": true
   },
   "slug": "pocket-list",
-  "svk_version": "2.0.0",
+  "svk_version": "2.1.0",
   "team_size": 1,
   "title": "Pocket List"
 }

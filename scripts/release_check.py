@@ -46,6 +46,7 @@ def check_required_files(issues):
         ".editorconfig",
         ".gitignore",
         ".github/workflows/ci.yml",
+        ".github/workflows/release.yml",
         "CHANGELOG.md",
         "CONTRIBUTING.md",
         "LICENSE",
@@ -58,6 +59,7 @@ def check_required_files(issues):
         "installer/install.sh",
         "skill/VERSION",
         "scripts/build_release.py",
+        "scripts/verify_archive.py",
     )
     for name in required:
         path = ROOT / name

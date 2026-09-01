@@ -1,0 +1,26 @@
+{
+  "after_revision": 3,
+  "before_revision": 2,
+  "details": {
+    "lease": {
+      "created_at": "2026-08-30T21:39:10Z",
+      "expires_at": "2026-08-30T23:39:10Z",
+      "kit_version": "2.1.0",
+      "owner": "example-builder",
+      "schema_version": "2.1",
+      "state_revision": 2,
+      "task_id": "2.1.1"
+    },
+    "note": null,
+    "receipt_ids": [
+      "f3a04373f3056c566c9869fe567e157c452ef83c45e95c1ffb71f632ce2007e2"
+    ]
+  },
+  "id": "f3bea024428e4446abe3c4af079b76be",
+  "kit_version": "2.1.0",
+  "operation": "finish",
+  "recorded_at": "2026-08-30T21:39:11Z",
+  "schema_version": "2.1",
+  "status": "committed",
+  "task_id": "2.1.1"
+}

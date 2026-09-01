@@ -1,0 +1,12 @@
+{
+  "diagnostics": [
+    {
+      "category": "lock",
+      "code": "SVK-LOCK-PRESENT",
+      "level": "BLOCKED",
+      "message": "Task lease is active.",
+      "path": ".svk/locks/next.json"
+    }
+  ],
+  "result": "BLOCKED"
+}

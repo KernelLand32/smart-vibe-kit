@@ -2,7 +2,9 @@
 
 from __future__ import print_function
 
-from .constants import CORE_DOCUMENTS, MODULE_DOCUMENTS, VERSION
+import copy
+
+from .constants import CORE_DOCUMENTS, MODULE_DOCUMENTS, SCHEMA_VERSION, VERSION
 from .util import utc_now
 
 
@@ -25,86 +27,101 @@ def _bullet(values, fallback):
     return "\n".join("- %s" % value for value in values)
 
 
-def build_tasks(profile, charter_accepted=False):
+def _system_task(task_id, title, status, depends_on, human_gate, artifact, acceptance, deliverable, risk="normal"):
+    return {
+        "id": task_id,
+        "kind": "documentation" if task_id != "4.1.1" else "verification",
+        "title": title,
+        "goal_id": "system",
+        "deliverable_id": deliverable,
+        "status": status,
+        "depends_on": list(depends_on),
+        "dependency_rationale": {dependency: "SVK setup prerequisite." for dependency in depends_on},
+        "human_gate": bool(human_gate),
+        "acceptance": list(acceptance),
+        "expected_artifacts": [artifact],
+        "scope_hints": [artifact],
+        "required_verifiers": [] if task_id == "1.1.2" else ["svk-governed"],
+        "risk": risk,
+        "size_signals": {
+            "subsystems": 1,
+            "acceptance_items": len(acceptance),
+            "verifier_count": 0 if task_id == "1.1.2" else 1,
+            "scope_hints": 1,
+        },
+        "completion_receipts": [],
+    }
+
+
+def build_tasks(profile, plan, charter_accepted=False):
     tasks = [
-        {
-            "id": "1.1.1",
-            "title": "Capture the project interview and adaptive profile",
-            "status": "done",
-            "depends_on": [],
-            "human_gate": False,
-            "artifact": ".svk/project.json",
-            "verification": "The project profile passes SVK semantic validation.",
-        },
-        {
-            "id": "1.1.2",
-            "title": "Review and accept the project charter",
-            "status": "done" if charter_accepted else "in_progress",
-            "depends_on": ["1.1.1"],
-            "human_gate": True,
-            "artifact": "docs/adr/0001-project-charter.md",
-            "verification": "A human confirms scope, goals, non-goals, constraints, and selected modules.",
-        },
+        _system_task(
+            "1.1.1",
+            "Capture the project interview, profile, and approved plan",
+            "done",
+            [],
+            False,
+            ".svk/plan.json",
+            ["The profile and approved plan pass deterministic validation."],
+            "interview",
+        ),
+        _system_task(
+            "1.1.2",
+            "Review and accept the project charter",
+            "done" if charter_accepted else "in_progress",
+            ["1.1.1"],
+            True,
+            "docs/adr/0001-project-charter.md",
+            ["A human attests that scope, goals, non-goals, constraints, modules, and plan are accepted."],
+            "charter",
+        ),
     ]
     index = 1
-    previous = "1.1.2"
+    setup_ids = []
     for module in profile["modules"]:
         if module == "core":
             continue
         title, artifact = MODULE_TASKS[module]
         task_id = "2.%d.1" % index
         tasks.append(
-            {
-                "id": task_id,
-                "title": title,
-                "status": "pending",
-                "depends_on": [previous],
-                "human_gate": module in ("security", "regulated"),
-                "artifact": artifact,
-                "verification": "The artifact contains project-specific decisions and evidence.",
-            }
+            _system_task(
+                task_id,
+                title,
+                "pending",
+                ["1.1.2"],
+                module in ("security", "regulated"),
+                artifact,
+                ["The artifact contains project-specific decisions, risks, and observable completion evidence."],
+                "module-%s" % module,
+                risk="high" if module in ("security", "regulated") else "normal",
+            )
         )
-        previous = task_id
+        setup_ids.append(task_id)
         index += 1
-    implementation_previous = previous
-    for goal_index, goal in enumerate(profile.get("goals", []), 1):
-        task_id = "3.%d.1" % goal_index
-        tasks.append(
-            {
-                "id": task_id,
-                "title": "Implement and verify: %s" % goal,
-                "status": "pending",
-                "depends_on": [implementation_previous],
-                "human_gate": False,
-                "artifact": "Implementation and tests for: %s" % goal,
-                "verification": "The goal has observable passing evidence and respects the accepted constraints.",
-            }
-        )
-        implementation_previous = task_id
-    if not profile.get("goals"):
-        tasks.append(
-            {
-                "id": "3.1.1",
-                "title": "Define and implement the first useful project increment",
-                "status": "pending",
-                "depends_on": [implementation_previous],
-                "human_gate": False,
-                "artifact": "Project implementation and tests",
-                "verification": "A useful increment is implemented with observable passing evidence.",
-            }
-        )
-        implementation_previous = "3.1.1"
-    tasks.append(
-        {
-            "id": "4.1.1",
-            "title": "Run the release-readiness verification gate",
-            "status": "pending",
-            "depends_on": [implementation_previous],
-            "human_gate": False,
-            "artifact": "docs/verification.md",
-            "verification": "All required checks pass and evidence is recorded.",
-        }
+    for item in plan["tasks"]:
+        task = copy.deepcopy(item)
+        task["status"] = "pending"
+        task["completion_receipts"] = []
+        tasks.append(task)
+    release_dependencies = [task["id"] for task in plan["tasks"]]
+    release_verifiers = list(dict.fromkeys(["svk-governed"] + plan["release_verifiers"]))
+    release_task = _system_task(
+        "4.1.1",
+        "Run the release-readiness verification gate",
+        "pending",
+        release_dependencies,
+        False,
+        "docs/verification.md",
+        ["Every approved release verifier passes against the current project inputs."],
+        "release",
     )
+    release_task["required_verifiers"] = release_verifiers
+    release_task["size_signals"]["verifier_count"] = len(release_verifiers)
+    release_task["dependency_rationale"] = {
+        dependency: "Release readiness requires every approved project task to be complete."
+        for dependency in release_dependencies
+    }
+    tasks.append(release_task)
     if charter_accepted:
         completed = {task["id"] for task in tasks if task["status"] == "done"}
         for task in tasks:
@@ -118,25 +135,32 @@ def next_action(tasks):
     active = [task for task in tasks if task["status"] in ("in_progress", "blocked")]
     if len(active) == 1:
         return {"task_id": active[0]["id"], "instruction": active[0]["title"]}
-    completed = {task["id"] for task in tasks if task["status"] == "done"}
+    completed = {task["id"] for task in tasks if task["status"] in ("done", "superseded")}
     for task in tasks:
         if task["status"] == "pending" and set(task["depends_on"]).issubset(completed):
             return {"task_id": task["id"], "instruction": task["title"]}
     return None
 
 
-def build_state(profile, charter_accepted=False):
-    tasks = build_tasks(profile, charter_accepted=charter_accepted)
+def build_state(profile, plan, charter_accepted=False):
+    tasks = build_tasks(profile, plan, charter_accepted=charter_accepted)
     action = next_action(tasks)
     return {
-        "schema_version": "2.0",
+        "schema_version": SCHEMA_VERSION,
         "kit_version": VERSION,
+        "state_revision": 1,
         "project": profile["slug"],
         "stage": "charter" if not charter_accepted else "execution",
         "charter": {"accepted": bool(charter_accepted)},
         "tasks": tasks,
         "next_action": action,
-        "authorizations": [],
+        "authorizations": ([{
+            "task_id": "1.1.2",
+            "actor": "interview caller",
+            "reason": "The caller explicitly used the charter-accepted Interview option.",
+            "recorded_at": utc_now(),
+            "kind": "cooperative-human-attestation",
+        }] if charter_accepted else []),
         "updated_at": utc_now(),
     }
 
@@ -146,7 +170,12 @@ def _task_table(tasks):
     for task in tasks:
         rows.append(
             "| %s | %s | %s | `%s` |"
-            % (task["id"], task["status"], task["title"], task["artifact"])
+            % (
+                task["id"],
+                task["status"],
+                task["title"],
+                ", ".join(task.get("expected_artifacts", [])) or task.get("no_artifact_reason", "none"),
+            )
         )
     return "\n".join(rows)
 
@@ -162,7 +191,7 @@ def _header(title, profile):
 def _core_documents(profile, state):
     action = state["next_action"]
     action_text = "Complete" if action is None else "%s — %s" % (action["task_id"], action["instruction"])
-    agents = _header("Agent operating contract", profile) + """This repository uses Smart Vibe Kit 2.0 as a small, evidence-backed project operating system.
+    agents = _header("Agent operating contract", profile) + """This repository uses Smart Vibe Kit 2.1 as a small, evidence-backed project operating system.
 
 ## Current objective
 
@@ -170,10 +199,10 @@ def _core_documents(profile, state):
 
 ## Working rules
 
-- Read [.svk/project.json](.svk/project.json), [.svk/state.json](.svk/state.json), and [docs/tasks.md](docs/tasks.md) before changing project artifacts.
+- Read [.svk/project.json](.svk/project.json), [.svk/plan.json](.svk/plan.json), [.svk/state.json](.svk/state.json), and [docs/tasks.md](docs/tasks.md) before changing project artifacts.
 - Work on only the exact `next_action` recorded in state.
 - Never infer permission for destructive actions, external publication, spending, secrets, or production changes.
-- Record verifiable evidence before marking work complete.
+- Run the task's registered SVK verifiers and use their receipt IDs before marking work complete.
 - Run the SVK check action after editing operating documents.
 - Stop after one task when using SVK Next.
 
@@ -225,7 +254,7 @@ def _core_documents(profile, state):
 
 ## Execution rule
 
-Exactly one task may be active. SVK Next performs or advances that task and then stops.
+Exactly one task may be active. Dependencies may branch, but SVK 2.1 still leases one task at a time. SVK Next advances that task and then stops.
 """ % _task_table(state["tasks"])
 
     all_paths = list(CORE_DOCUMENTS)
@@ -261,24 +290,24 @@ Use the **%s** SVK profile with these modules: %s.
 
 ## Acceptance
 
-Accept with `svk-next finish --task 1.1.2 --owner <owner> --evidence <file>` after reviewing this document.
+Begin with an explicit cooperative human attestation, then finish task 1.1.2 after reviewing this document. The attestation records what the caller says happened; it is not authenticated identity.
 """ % (charter_status, profile["idea"], profile["profile"], _module_summary(profile))
 
     verification = _header("Verification strategy", profile) + """## Required gates
 
 1. Structure: all profile-required artifacts exist and contain substantive text.
 2. State: task IDs, dependencies, status, and `next_action` agree.
-3. Evidence: every completed task has a corresponding evidence record.
+3. Evidence: every required verifier has a fresh SVK-created receipt bound to the task inputs.
 4. References: relative Markdown links resolve inside the project.
 5. Safety: no incomplete transaction or live lock remains.
 
 ## Evidence format
 
-Evidence is JSON with `summary`, `commands`, `artifacts`, and `result` fields. Store one record per completed task in `.svk/evidence.jsonl`.
+SVK stores immutable verifier receipts under `.svk/evidence/runs/` and indexes them in `.svk/evidence/index.json`. Human notes and cooperative attestations may add context but do not replace a required verifier receipt.
 
 ## Release gate
 
-The project is release-ready only when the SVK Check result is `PASS` and task 3.1.1 has evidence.
+The project is release-ready only when the SVK Check result is `PASS` and the release task has fresh passing receipts for every configured release verifier.
 """
     return {
         "AGENTS.md": agents,
@@ -359,7 +388,7 @@ def _module_documents(profile):
 - Decisions refer to the project idea and accepted scope.
 - Claims that can become stale include dated evidence.
 - Risks identify an owner, mitigation, and observable completion signal.
-- The related task is complete only after evidence is appended to `.svk/evidence.jsonl`.
+- The related task is complete only after its required verifier receipts are recorded by SVK.
 
 ## Initial direction
 

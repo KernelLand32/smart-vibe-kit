@@ -10,21 +10,25 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python: ['3.8', '3.12']
+        python: ['3.11', '3.14']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
       - name: Runtime tests
         run: python -B -m unittest discover -s skill/tests -v
       - name: Installer tests
         run: python -B -m unittest discover -s installer/tests -v
+      - name: Worked example tests
+        run: python -B -m unittest discover -s examples/pocket-list/tests -v
       - name: Package contract
         run: python -B skill/runtime/svk.py check --package --root skill
       - name: Complete release audit
         run: python -B scripts/release_check.py
+      - name: Extracted archive audit
+        run: python -B scripts/verify_archive.py
       - name: POSIX launcher smoke test
         if: runner.os != 'Windows'
         run: sh installer/install.sh --version
@@ -32,3 +36,12 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: ./installer/install.ps1 --version
+
+  required:
+    name: Required verification gate
+    needs: test
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every matrix job
+        run: test "${{ needs.test.result }}" = "success"
